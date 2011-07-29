@@ -1,0 +1,9 @@
+<?php
+
+# Copyright (c) 2011 John Reese
+# Licensed under the MIT license
+
+$s_plugin_Scrum_ = '';
+$s_plugin_Scrum_title = 'Scrum';
+$s_plugin_Scrum_description = 'Scrum board based on status, priority, and target version';
+
