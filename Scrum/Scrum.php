@@ -19,4 +19,19 @@ class ScrumPlugin extends MantisPlugin
 		$this->contact = "john@noswap.com";
 		$this->url = "http://noswap.com";
 	}
+
+	public function hooks()
+	{
+		return array(
+			"EVENT_MENU_MAIN" => "menu",
+		);
+	}
+
+	public function menu($event)
+	{
+		$links = array();
+		$links[] = '<a href="' . plugin_page("board") . '">' . plugin_lang_get("board") . '</a>';
+
+		return $links;
+	}
 }
