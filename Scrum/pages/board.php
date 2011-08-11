@@ -13,8 +13,38 @@ html_page_top(plugin_lang_get("board"));
 
 $bug_table = db_get_table("mantis_bug_table");
 
-$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ORDER BY status ASC, priority DESC, id DESC";
+# Fetch list of target versions in use for the given projects
+$query = "SELECT DISTINCT target_version FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ORDER BY target_version DESC";
 $result = db_query_bound($query);
+
+$versions = array();
+while ($row = db_fetch_array($result))
+{
+	if ($row["target_version"])
+	{
+		$versions[] = $row["target_version"];
+	}
+}
+
+# Get the selected target version
+$target_version = gpc_get_string("version", "");
+if (!in_array($target_version, $versions))
+{
+	$target_version = "";
+}
+
+# Retrieve all bugs with the matching target version
+$params = array();
+$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ";
+
+if ($target_version)
+{
+	$query .= "AND target_version=" . db_param();
+	$params[] = $target_version;
+}
+
+$query .= " ORDER BY status ASC, priority DESC, id DESC";
+$result = db_query_bound($query, $params);
 
 $bug_ids = array();
 while ($row = db_fetch_array($result))
@@ -38,7 +68,19 @@ foreach ($bug_ids as $bug_id)
 <table class="width100" align="center" cellspacing="1">
 
 <tr>
-<td class="form-title" colspan="<?php echo count($statuses) ?>">Scrum Board Thingy</td>
+<td class="form-title" colspan="<?php echo count($statuses) ?>">
+<?php echo plugin_lang_get("board") ?>
+<form action="<?php echo plugin_page("board") ?>" method="get">
+<input type="hidden" name="page" value="Scrum/board"/>
+<select name="version">
+<option value=""></option>
+<?php foreach ($versions as $version): ?>
+<option value="<?php echo string_attribute($version) ?>" <?php if ($version == $target_version) echo 'selected="selected"' ?>><?php echo string_display_line($version) ?></option>
+<?php endforeach ?>
+</select>
+<input type="submit" value="Go"/>
+</form>
+</td>
 </tr>
 
 <tr class="row-category">
