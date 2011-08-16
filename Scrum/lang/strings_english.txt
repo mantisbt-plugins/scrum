@@ -8,4 +8,5 @@ $s_plugin_Scrum_title = 'Scrum';
 $s_plugin_Scrum_description = 'Scrum board based on status, priority, and target version';
 
 $s_plugin_Scrum_board = 'Scrum Board';
+$s_plugin_Scrum_all = 'All';
 

@@ -73,7 +73,7 @@ foreach ($bug_ids as $bug_id)
 <form action="<?php echo plugin_page("board") ?>" method="get">
 <input type="hidden" name="page" value="Scrum/board"/>
 <select name="version">
-<option value=""></option>
+<option value=""><?php echo plugin_lang_get("all") ?></option>
 <?php foreach ($versions as $version): ?>
 <option value="<?php echo string_attribute($version) ?>" <?php if ($version == $target_version) echo 'selected="selected"' ?>><?php echo string_display_line($version) ?></option>
 <?php endforeach ?>
