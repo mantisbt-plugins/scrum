@@ -97,14 +97,14 @@ foreach ($bug_ids as $bug_id)
 <?php foreach ($columns as $column => $statuses): ?>
 <td class="scrumcolumn">
 <?php $first = true; foreach ($statuses as $status): ?>
-<?php if (isset($bugs[$status])): ?>
+<?php if (isset($bugs[$status]) || plugin_config_get("show_empty_status")): ?>
 <?php if ($first): $first = false; else: ?>
 <hr/>
 <?php endif ?>
 <?php $status_name = get_enum_element("status", $status); if ($status_name != $column): ?>
 <p class="scrumstatus"><?php echo get_enum_element("status", $status) ?></p>
 <?php endif ?>
-<?php foreach ($bugs[$status] as $bug): ?>
+<?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug): ?>
 
 <div class="scrumblock">
 <p class="bugid"><?php echo print_bug_link($bug->id) ?></p>

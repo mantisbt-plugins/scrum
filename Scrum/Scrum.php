@@ -35,6 +35,8 @@ class ScrumPlugin extends MantisPlugin
 
 			#$g_resolution_enum_string = '10:open,20:fixed,30:reopened,40:unable to duplicate,50:not fixable,60:duplicate,70:not a bug,80:suspended,90:wont fix';
 			"board_resolution_colors" => array(),
+
+			"show_empty_status" => OFF,
 		);
 	}
 
