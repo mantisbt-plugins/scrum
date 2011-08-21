@@ -6,6 +6,9 @@ td.scrumcolumn {
 
 td.scrumcolumn hr {
 	clear: both;
+	border: 0;
+	border-bottom: 1px dotted #aaa;
+	height: 6px;
 }
 
 div.scrumblock {
