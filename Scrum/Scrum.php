@@ -20,6 +20,24 @@ class ScrumPlugin extends MantisPlugin
 		$this->url = "http://noswap.com";
 	}
 
+	public function config()
+	{
+		return array(
+			#$g_status_enum_string = '10:new,20:feedback,30:acknowledged,40:confirmed,50:assigned,80:resolved,90:closed';
+			"board_columns" => array(
+				"New" => array(10, 20, 30),
+				"Confirmed" => array(40, 50),
+				"Resolved" => array(80),
+			),
+
+			#$g_severity_enum_string = '10:feature,20:trivial,30:text,40:tweak,50:minor,60:major,70:crash,80:block';
+			"board_severity_colors" => array(),
+
+			#$g_resolution_enum_string = '10:open,20:fixed,30:reopened,40:unable to duplicate,50:not fixable,60:duplicate,70:not a bug,80:suspended,90:wont fix';
+			"board_resolution_colors" => array(),
+		);
+	}
+
 	public function hooks()
 	{
 		return array(

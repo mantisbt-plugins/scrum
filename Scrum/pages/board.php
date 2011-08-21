@@ -3,8 +3,6 @@
 # Copyright (c) 2011 John Reese
 # Licensed under the MIT license
 
-$statuses = MantisEnum::getValues(config_get("status_enum_string"));
-
 $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects($current_project);
 $project_ids[] = $current_project;
@@ -55,6 +53,7 @@ while ($row = db_fetch_array($result))
 bug_cache_array_rows($bug_ids);
 $bugs = array();
 $status = array();
+$columns = plugin_config_get("board_columns");
 
 foreach ($bug_ids as $bug_id)
 {
@@ -64,11 +63,13 @@ foreach ($bug_ids as $bug_id)
 
 ?>
 
+<link rel="stylesheet" type="text/css" href="<?php echo plugin_file("scrumboard.css") ?>"/>
+
 <br/>
-<table class="width100" align="center" cellspacing="1">
+<table class="width100 scrumboard" align="center" cellspacing="1">
 
 <tr>
-<td class="form-title" colspan="<?php echo count($statuses) ?>">
+<td class="form-title" colspan="<?php echo count($columns) ?>">
 <?php echo plugin_lang_get("board") ?>
 <form action="<?php echo plugin_page("board") ?>" method="get">
 <input type="hidden" name="page" value="Scrum/board"/>
@@ -85,18 +86,35 @@ foreach ($bug_ids as $bug_id)
 
 <tr class="row-category">
 
-<?php foreach ($statuses as $status): ?>
-<td><?php echo get_enum_element("status", $status) ?></th>
+<?php foreach ($columns as $column => $statuses): ?>
+<td><?php echo $column ?></th>
 <?php endforeach ?>
 
 </tr>
 
 <tr class="row-1">
 
-<?php foreach ($statuses as $status): ?>
-<td style="vertical-align: top">
-<?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug): ?>
-<p><?php echo $bug->summary ?></p>
+<?php foreach ($columns as $column => $statuses): ?>
+<td class="scrumcolumn">
+<?php $first = true; foreach ($statuses as $status): ?>
+<?php if (isset($bugs[$status])): ?>
+<?php if ($first): $first = false; else: ?>
+<hr/>
+<?php endif ?>
+<?php $status_name = get_enum_element("status", $status); if ($status_name != $column): ?>
+<p class="scrumstatus"><?php echo get_enum_element("status", $status) ?></p>
+<?php endif ?>
+<?php foreach ($bugs[$status] as $bug): ?>
+
+<div class="scrumblock">
+<p class="bugid"><?php echo print_bug_link($bug->id) ?></p>
+<p class="commits"></p>
+<p class="category"><?php echo category_full_name($bug->category_id, false) ?></p>
+<p class="summary"><?php echo $bug->summary ?></p>
+</div>
+
+<?php endforeach ?>
+<?php endif ?>
 <?php endforeach ?>
 </td>
 <?php endforeach ?>

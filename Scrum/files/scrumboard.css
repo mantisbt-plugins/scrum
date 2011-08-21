@@ -1,0 +1,53 @@
+td.scrumcolumn {
+	/* width: 200px; */
+	padding: 4px;
+	vertical-align: top;
+}
+
+td.scrumcolumn hr {
+	clear: both;
+}
+
+div.scrumblock {
+	/* display: inline-block; */
+	float: left;
+	width: 186px;
+	margin: 4px;
+
+	background: #FAF3AA;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+
+	text-align: center;
+	overflow: hidden;
+}
+
+div.scrumblock p {
+	margin: 3px;
+}
+
+div.scrumblock p.bugid {
+	float: left;
+	color: blue;
+}
+
+div.scrumblock p.commits {
+	float: right;
+	color: black;
+}
+
+div.scrumblock p.category {
+	font-weight: bold;
+}
+
+div.scrumblock p.summary {
+	clear: both;
+	width: 100%;
+	height: 7em;
+	border-top: 1px solid #e7df8a;
+	padding-top: 3px;
+	text-align: left;
+	overflow: hidden;
+}
