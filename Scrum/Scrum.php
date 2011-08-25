@@ -31,10 +31,29 @@ class ScrumPlugin extends MantisPlugin
 			),
 
 			#$g_severity_enum_string = '10:feature,20:trivial,30:text,40:tweak,50:minor,60:major,70:crash,80:block';
-			"board_severity_colors" => array(),
+			"board_severity_colors" => array(
+				10 => "green",
+				20 => "green",
+				30 => "green",
+				40 => "green",
+				50 => "gray",
+				60 => "gray",
+				70 => "orange",
+				80 => "red",
+			),
 
 			#$g_resolution_enum_string = '10:open,20:fixed,30:reopened,40:unable to duplicate,50:not fixable,60:duplicate,70:not a bug,80:suspended,90:wont fix';
-			"board_resolution_colors" => array(),
+			"board_resolution_colors" => array(
+				10 => "orange",
+				20 => "green",
+				30 => "red",
+				40 => "gray",
+				50 => "gray",
+				60 => "gray",
+				70 => "gray",
+				80 => "gray",
+				90 => "gray",
+			),
 
 			"show_empty_status" => OFF,
 		);

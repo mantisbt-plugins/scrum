@@ -54,6 +54,8 @@ bug_cache_array_rows($bug_ids);
 $bugs = array();
 $status = array();
 $columns = plugin_config_get("board_columns");
+$sevcolors = plugin_config_get("board_severity_colors");
+$rescolors = plugin_config_get("board_resolution_colors");
 
 foreach ($bug_ids as $bug_id)
 {
@@ -104,9 +106,12 @@ foreach ($bug_ids as $bug_id)
 <?php $status_name = get_enum_element("status", $status); if ($status_name != $column): ?>
 <p class="scrumstatus"><?php echo get_enum_element("status", $status) ?></p>
 <?php endif ?>
-<?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug): ?>
+<?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug):
+$sevcolor = $sevcolors[$bug->severity];
+$rescolor = $rescolors[$bug->resolution];
+?>
 
-<div class="scrumblock">
+<div class="scrumblock" style="border-left-color: <?php echo $sevcolor ?>; border-right-color: <?php echo $rescolor ?>">
 <p class="bugid"><?php echo print_bug_link($bug->id) ?></p>
 <p class="commits"></p>
 <p class="category"><?php echo category_full_name($bug->category_id, false) ?></p>
