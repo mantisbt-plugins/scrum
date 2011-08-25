@@ -14,6 +14,9 @@ class ScrumPlugin extends MantisPlugin
 		$this->requires = array(
 			"MantisCore" => "1.2.6",
 		);
+		$this->uses = array(
+			"Source" => "0.16",
+		);
 
 		$this->author = "John Reese";
 		$this->contact = "john@noswap.com";

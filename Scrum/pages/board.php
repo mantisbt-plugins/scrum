@@ -57,10 +57,14 @@ $columns = plugin_config_get("board_columns");
 $sevcolors = plugin_config_get("board_severity_colors");
 $rescolors = plugin_config_get("board_resolution_colors");
 
+$use_source = plugin_is_loaded("Source");
+
 foreach ($bug_ids as $bug_id)
 {
 	$bug = bug_get($bug_id);
 	$bugs[$bug->status][] = $bug;
+
+	$source_count[$bug_id] = $use_source ? count(SourceChangeset::load_by_bug($bug_id)) : "";
 }
 
 ?>
@@ -113,7 +117,7 @@ $rescolor = $rescolors[$bug->resolution];
 
 <div class="scrumblock" style="border-left-color: <?php echo $sevcolor ?>; border-right-color: <?php echo $rescolor ?>">
 <p class="bugid"><?php echo print_bug_link($bug->id) ?></p>
-<p class="commits"></p>
+<p class="commits"><?php echo $source_count[$bug->id] ?></p>
 <p class="category"><?php echo category_full_name($bug->category_id, false) ?></p>
 <p class="summary"><?php echo $bug->summary ?></p>
 </div>
