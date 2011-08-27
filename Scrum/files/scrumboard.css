@@ -1,3 +1,15 @@
+div.scrumprogress {
+	float: left;
+	text-align: center;
+	border: 1px dotted gray;
+}
+
+div.scrumtimeleft {
+	float: right;
+	text-align: center;
+	border: 1px dotted gray;
+}
+
 td.scrumcolumn {
 	/* width: 200px; */
 	padding: 4px;

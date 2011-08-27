@@ -10,3 +10,8 @@ $s_plugin_Scrum_description = 'Scrum board based on status, priority, and target
 $s_plugin_Scrum_board = 'Scrum Board';
 $s_plugin_Scrum_all = 'All';
 
+$s_plugin_Scrum_time_weeks = ' weeks left';
+$s_plugin_Scrum_time_days = ' days left';
+$s_plugin_Scrum_time_hours = ' hours left';
+$s_plugin_Scrum_time_up = 'Sprint over';
+

@@ -7,7 +7,7 @@ $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects($current_project);
 $project_ids[] = $current_project;
 
-html_page_top(plugin_lang_get("board"));
+$resolved_threshold = config_get("bug_resolved_status_threshold");
 
 $bug_table = db_get_table("mantis_bug_table");
 
@@ -56,8 +56,10 @@ $status = array();
 $columns = plugin_config_get("board_columns");
 $sevcolors = plugin_config_get("board_severity_colors");
 $rescolors = plugin_config_get("board_resolution_colors");
+$sprint_length = plugin_config_get("sprint_length");
 
 $use_source = plugin_is_loaded("Source");
+$resolved_count = 0;
 
 foreach ($bug_ids as $bug_id)
 {
@@ -65,7 +67,58 @@ foreach ($bug_ids as $bug_id)
 	$bugs[$bug->status][] = $bug;
 
 	$source_count[$bug_id] = $use_source ? count(SourceChangeset::load_by_bug($bug_id)) : "";
+	if ($bug->status >= $resolved_threshold)
+	{
+		$resolved_count++;
+	}
 }
+
+$bug_count = count($bug_ids);
+$resolved_percent = floor(100 * $resolved_count / $bug_count);
+$progress_width = min(99, max(8, $resolved_percent));
+
+if ($target_version)
+{
+	foreach($project_ids as $project_id)
+	{
+		$version_id = version_get_id($target_version, $project_id, true);
+		if ($version_id !== false)
+		{
+			break;
+		}
+	}
+
+	$version = version_get($version_id);
+	$version_date = $version->date_order;
+	$now = time();
+
+	$time_diff = $version_date - $now;
+	$time_hours = floor($time_diff / 3600);
+	$time_days = floor($time_diff / 86400);
+	$time_weeks = floor($time_diff / 604800);
+
+	$timeleft_percent = floor(100 * $time_diff / $sprint_length);
+	$timeleft_width = min(99, max(8, $timeleft_percent));
+
+	if ($time_diff <= 0)
+	{
+		$timeleft_string = plugin_lang_get("time_up");
+	}
+	else if ($time_weeks > 1)
+	{
+		$timeleft_string = $time_weeks . plugin_lang_get("time_weeks");
+	}
+	else if ($time_days > 1)
+	{
+		$timeleft_string = $time_days . plugin_lang_get("time_days");
+	}
+	else if ($time_hours > 1)
+	{
+		$timeleft_string = $time_hours . plugin_lang_get("time_hours");
+	}
+}
+
+html_page_top(plugin_lang_get("board"));
 
 ?>
 
@@ -89,6 +142,20 @@ foreach ($bug_ids as $bug_id)
 </form>
 </td>
 </tr>
+
+<tr>
+<td colspan="<?php echo count($columns) ?>">
+<div class="scrumprogress" style="width: <?php echo $progress_width ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></div>
+</td>
+</tr>
+
+<?php if ($target_version): ?>
+<tr>
+<td colspan="<?php echo count($columns) ?>">
+<div class="scrumtimeleft" style="width: <?php echo $timeleft_width ?>%"><?php echo $timeleft_string ?></div>
+</td>
+</tr>
+<?php endif ?>
 
 <tr class="row-category">
 

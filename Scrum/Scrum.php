@@ -58,6 +58,7 @@ class ScrumPlugin extends MantisPlugin
 				90 => "gray",
 			),
 
+			"sprint_length" => 1209600, # 14 days (14 * 24 * 60 * 60)
 			"show_empty_status" => OFF,
 		);
 	}
