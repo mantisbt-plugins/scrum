@@ -189,7 +189,7 @@ $sevcolor = $sevcolors[$bug->severity];
 $rescolor = $rescolors[$bug->resolution];
 ?>
 
-<div class="scrumblock" style="border-left-color: <?php echo $sevcolor ?>; border-right-color: <?php echo $rescolor ?>">
+<div class="scrumblock">
 <p class="bugid"><?php echo print_bug_link($bug->id) ?></p>
 <p class="commits"><?php echo $source_count[$bug->id] ?></p>
 <p class="category"><?php echo category_full_name($bug->category_id, false) ?></p>

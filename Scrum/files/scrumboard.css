@@ -30,10 +30,7 @@ div.scrumblock {
 	margin: 4px;
 
 	background: #FAF3AA;
-	border-top: 1px solid black;
-	border-left: 3px solid black;
-	border-right: 3px solid black;
-	border-bottom: 1px solid black;
+	border: 1px solid black;
 
 	text-align: center;
 	overflow: hidden;
