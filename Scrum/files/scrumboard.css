@@ -24,7 +24,7 @@ td.scrumcolumn hr {
 
 div.scrumblock {
 	float: left;
-	width: 186px;
+	width: 230px;
 	margin: 4px;
 
 	background: #FAF3AA;
@@ -55,9 +55,32 @@ div.scrumblock p.category {
 div.scrumblock p.summary {
 	clear: both;
 	width: 100%;
-	height: 7em;
+	height: 5em;
 	border-top: 1px solid #e7df8a;
+	border-bottom: 1px solid #e7df8a;
 	padding-top: 3px;
 	text-align: left;
 	overflow: hidden;
 }
+
+div.scrumblock span.project {
+	font-weight: bold;
+}
+
+div.scrumblock p.priority {
+	float: left;
+	vertical-align: top;
+}
+
+div.scrumblock p.severity {
+	float: left;
+}
+
+div.scrumblock p.resolution {
+	float: right;
+}
+
+div.scrumblock p.handler {
+	padding-top: 3px;
+}
+

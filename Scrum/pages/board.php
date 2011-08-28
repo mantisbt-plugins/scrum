@@ -3,6 +3,8 @@
 # Copyright (c) 2011 John Reese
 # Licensed under the MIT license
 
+require_once("icon_api.php");
+
 $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects($current_project);
 $project_ids[] = $current_project;
@@ -193,7 +195,18 @@ $rescolor = $rescolors[$bug->resolution];
 <p class="bugid"><?php echo print_bug_link($bug->id) ?></p>
 <p class="commits"><?php echo $source_count[$bug->id] ?></p>
 <p class="category"><?php echo category_full_name($bug->category_id, false) ?></p>
-<p class="summary"><?php echo $bug->summary ?></p>
+<p class="summary">
+<?php if ($bug->project_id != $current_project) {
+	$project_name = project_get_name($bug->project_id);
+	echo "<span class=\"project\">{$project_name}</span>: ";
+}
+?>
+<?php echo $bug->summary ?>
+</p>
+<p class="priority"><?php print_status_icon($bug->priority) ?></p>
+<p class="severity"><?php echo $bug->severity ?></p>
+<p class="resolution"><?php echo $bug->resolution ?></p>
+<p class="handler"><?php echo $bug->handler_id > 0 ? user_get_name($bug->handler_id) : "" ?></p>
 </div>
 
 <?php endforeach ?>
