@@ -74,7 +74,14 @@ foreach ($bug_ids as $bug_id)
 }
 
 $bug_count = count($bug_ids);
-$resolved_percent = floor(100 * $resolved_count / $bug_count);
+if ($bug_count > 0)
+{
+	$resolved_percent = floor(100 * $resolved_count / $bug_count);
+}
+else
+{
+	$resolved_percent = 0;
+}
 $progress_width = min(99, max(8, $resolved_percent));
 
 if ($target_version)
