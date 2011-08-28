@@ -74,10 +74,14 @@ div.scrumblock p.priority {
 
 div.scrumblock p.severity {
 	float: left;
+	width: 1.2em;
+	height: 1.2em;
 }
 
 div.scrumblock p.resolution {
 	float: right;
+	width: 1.2em;
+	height: 1.2em;
 }
 
 div.scrumblock p.handler {

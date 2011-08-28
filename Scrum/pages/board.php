@@ -192,20 +192,19 @@ $rescolor = $rescolors[$bug->resolution];
 ?>
 
 <div class="scrumblock">
-<p class="bugid"><?php echo print_bug_link($bug->id) ?></p>
+<p class="priority"><?php print_status_icon($bug->priority) ?></p>
+<p class="bugid"></p>
 <p class="commits"><?php echo $source_count[$bug->id] ?></p>
-<p class="category"><?php echo category_full_name($bug->category_id, false) ?></p>
-<p class="summary">
+<p class="category">
 <?php if ($bug->project_id != $current_project) {
 	$project_name = project_get_name($bug->project_id);
-	echo "<span class=\"project\">{$project_name}</span>: ";
+	echo "<span class=\"project\">{$project_name}</span> - ";
 }
-?>
-<?php echo $bug->summary ?>
+echo category_full_name($bug->category_id, false) ?>
 </p>
-<p class="priority"><?php print_status_icon($bug->priority) ?></p>
-<p class="severity"><?php echo $bug->severity ?></p>
-<p class="resolution"><?php echo $bug->resolution ?></p>
+<p class="summary"><?php echo print_bug_link($bug->id) ?>: <?php echo $bug->summary ?></p>
+<p class="severity" style="background: <?php echo $sevcolor ?>"></p>
+<p class="resolution" style="background: <?php echo $rescolor ?>"></p>
 <p class="handler"><?php echo $bug->handler_id > 0 ? user_get_name($bug->handler_id) : "" ?></p>
 </div>
 
