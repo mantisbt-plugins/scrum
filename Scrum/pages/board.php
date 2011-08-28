@@ -33,14 +33,57 @@ if (!in_array($target_version, $versions))
 	$target_version = "";
 }
 
-# Retrieve all bugs with the matching target version
+# Fetch list of categories in use for the given projects
 $params = array();
-$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ";
+$query = "SELECT DISTINCT category_id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ";
 
 if ($target_version)
 {
 	$query .= "AND target_version=" . db_param();
 	$params[] = $target_version;
+}
+
+$result = db_query_bound($query, $params);
+$categories = array();
+$category_ids = array();
+while ($row = db_fetch_array($result))
+{
+	if ($row["category_id"])
+	{
+		$category_id = $row["category_id"];
+		$category_ids[] = $category_id;
+		$category_name = category_full_name($category_id, false);
+
+		if (isset($categories[$category_name]))
+		{
+			$categories[$category_name][] = $category_id;
+		}
+		else
+		{
+			$categories[$category_name] = array($category_id);
+		}
+	}
+}
+
+# Get the selected category
+$category = gpc_get_string("category", "");
+if (isset($categories[$category]))
+{
+	$category_ids = $categories[$category];
+}
+
+# Retrieve all bugs with the matching target version
+$params = array();
+$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ")";
+
+if ($target_version)
+{
+	$query .= " AND target_version=" . db_param();
+	$params[] = $target_version;
+}
+if ($category_name)
+{
+	$query .= " AND category_id IN (" . join(", ", $category_ids) . ")";
 }
 
 $query .= " ORDER BY status ASC, priority DESC, id DESC";
@@ -145,6 +188,12 @@ html_page_top(plugin_lang_get("board"));
 <option value=""><?php echo plugin_lang_get("all") ?></option>
 <?php foreach ($versions as $version): ?>
 <option value="<?php echo string_attribute($version) ?>" <?php if ($version == $target_version) echo 'selected="selected"' ?>><?php echo string_display_line($version) ?></option>
+<?php endforeach ?>
+</select>
+<select name="category">
+<option value=""><?php echo plugin_lang_get("all") ?></option>
+<?php foreach (array_keys($categories) as $category_name): ?>
+<option value="<?php echo $category_name ?>" <?php if ($category == $category_name) echo 'selected="selected"' ?>><?php echo $category_name ?></option>
 <?php endforeach ?>
 </select>
 <input type="submit" value="Go"/>
