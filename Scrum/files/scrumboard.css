@@ -11,7 +11,6 @@ div.scrumtimeleft {
 }
 
 td.scrumcolumn {
-	/* width: 200px; */
 	padding: 4px;
 	vertical-align: top;
 }
@@ -24,7 +23,6 @@ td.scrumcolumn hr {
 }
 
 div.scrumblock {
-	/* display: inline-block; */
 	float: left;
 	width: 186px;
 	margin: 4px;
