@@ -148,7 +148,7 @@ if ($target_version)
 	$time_days = floor($time_diff / 86400);
 	$time_weeks = floor($time_diff / 604800);
 
-	$timeleft_percent = 100 - floor(100 * $time_diff / $sprint_length);
+	$timeleft_percent = min(100, 100 - floor(100 * $time_diff / $sprint_length));
 
 	if ($time_diff <= 0)
 	{
