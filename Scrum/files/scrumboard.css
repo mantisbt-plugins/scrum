@@ -8,11 +8,12 @@ div.scrumbar {
 
 div.scrumbar span {
 	float: left;
-	padding: 0.5em 0em;
+	padding: 0.5em 1em;
 	text-align: center;
 }
 
 div.scrumbar span.bar {
+	padding: 0.5em 0em;
 	background: #d2f5b0;
 }
 
