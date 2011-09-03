@@ -1,13 +1,19 @@
-div.scrumprogress {
+div.scrumbar {
 	float: left;
-	text-align: center;
+	width: 48%;
 	border: 1px dotted gray;
+	margin-right: 1em;
+	padding: 0;
 }
 
-div.scrumtimeleft {
-	float: right;
+div.scrumbar span {
+	float: left;
+	padding: 0.5em 1em;
 	text-align: center;
-	border: 1px dotted gray;
+}
+
+div.scrumbar span.bar {
+	background: #d2f5b0;
 }
 
 td.scrumcolumn {

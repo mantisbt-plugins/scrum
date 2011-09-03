@@ -127,7 +127,6 @@ else
 {
 	$resolved_percent = 0;
 }
-$progress_width = min(99, max(8, $resolved_percent));
 
 if ($target_version)
 {
@@ -150,7 +149,6 @@ if ($target_version)
 	$time_weeks = floor($time_diff / 604800);
 
 	$timeleft_percent = floor(100 * $time_diff / $sprint_length);
-	$timeleft_width = min(99, max(8, $timeleft_percent));
 
 	if ($time_diff <= 0)
 	{
@@ -203,17 +201,26 @@ html_page_top(plugin_lang_get("board"));
 
 <tr>
 <td colspan="<?php echo count($columns) ?>">
-<div class="scrumprogress" style="width: <?php echo $progress_width ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></div>
-</td>
-</tr>
+<div class="scrumbar">
+<?php if ($resolved_percent > 50): ?>
+<span class="bar" style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+<?php else: ?>
+<span class="bar" style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+<?php endif ?>
+</div>
 
 <?php if ($target_version): ?>
-<tr>
-<td colspan="<?php echo count($columns) ?>">
-<div class="scrumtimeleft" style="width: <?php echo $timeleft_width ?>%"><?php echo $timeleft_string ?></div>
+<div class="scrumbar">
+<?php if ($timeleft_percent > 50): ?>
+<span class="bar" style="width: <?php echo $timeleft_percent ?>%"><?php echo $timeleft_string ?></span>
+<?php else: ?>
+<span class="bar" style="width: <?php echo $timeleft_percent ?>%">&nbsp;</span><span><?php echo $timeleft_string ?></span>
+<?php endif ?>
+</div>
+<?php endif ?>
+
 </td>
 </tr>
-<?php endif ?>
 
 <tr class="row-category">
 
