@@ -14,6 +14,8 @@ $resolved_threshold = config_get("bug_resolved_status_threshold");
 $bug_table = db_get_table("mantis_bug_table");
 $version_table = db_get_table("mantis_project_version_table");
 
+$cookie_name_version = plugin_config_get( 'cookie_name_version' );
+$cookie_name_category = plugin_config_get( 'cookie_name_category' );
 
 # Fetch list of target versions in use for the given projects
 $query = "SELECT DISTINCT v.version FROM {$version_table} v JOIN {$bug_table} b ON b.target_version= v.version WHERE v.project_id IN (".join(", ", $project_ids). ") ORDER BY v.date_order DESC";
@@ -30,11 +32,27 @@ while ($row = db_fetch_array($result))
 }
 
 # Get the selected target version
-$target_version = gpc_get_string("version", "");
+$versions_by_project = unserialize( gpc_get_cookie( $cookie_name_version, serialize(array()) ) );
+
+if ( gpc_isset("version") )
+{
+	$target_version = gpc_get_string("version", "");
+}
+else
+{
+	if ( array_key_exists( $current_project, $versions_by_project) )
+	{
+		$target_version = $versions_by_project[ $current_project ];
+	}
+}
+
 if (!in_array($target_version, $versions))
 {
 	$target_version = "";
 }
+
+$versions_by_project[ $current_project ] = $target_version;
+gpc_set_cookie( $cookie_name_version, serialize( $versions_by_project ) );
 
 # Fetch list of categories in use for the given projects
 $params = array();
@@ -69,11 +87,26 @@ while ($row = db_fetch_array($result))
 }
 
 # Get the selected category
-$category = gpc_get_string("category", "");
+$categories_by_project = unserialize( gpc_get_cookie( $cookie_name_category, serialize(array()) ) );
+
+if ( gpc_isset("category") )
+{
+	$category = gpc_get_string("category", "");
+} else
+{
+	if ( array_key_exists( $current_project, $categories_by_project) )
+	{
+		$category = $categories_by_project[ $current_project ];
+	}
+}
+
 if (isset($categories[$category]))
 {
 	$category_ids = $categories[$category];
 }
+
+$categories_by_project[ $current_project ] = $category;
+gpc_set_cookie( $cookie_name_category, serialize( $categories_by_project ) );
 
 # Retrieve all bugs with the matching target version
 $params = array();
