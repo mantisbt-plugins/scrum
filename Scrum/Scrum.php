@@ -58,6 +58,9 @@ class ScrumPlugin extends MantisPlugin
 				90 => "gray",
 			),
 
+			"cookie_name_version" => "MANTIS_SCRUM_VERSION_COOKIE",
+			"cookie_name_category" => "MANTIS_SCRUM_CATEGORY_COOKIE",
+
 			"sprint_length" => 1209600, # 14 days (14 * 24 * 60 * 60)
 			"show_empty_status" => OFF,
 		);
