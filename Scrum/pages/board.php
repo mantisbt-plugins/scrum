@@ -12,17 +12,20 @@ $project_ids[] = $current_project;
 $resolved_threshold = config_get("bug_resolved_status_threshold");
 
 $bug_table = db_get_table("mantis_bug_table");
+$version_table = db_get_table("mantis_project_version_table");
+
 
 # Fetch list of target versions in use for the given projects
-$query = "SELECT DISTINCT target_version FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ORDER BY target_version DESC";
+$query = "SELECT DISTINCT v.version FROM {$version_table} v JOIN {$bug_table} b ON b.target_version= v.version WHERE v.project_id IN (".join(", ", $project_ids). ") ORDER BY v.date_order DESC";
+
 $result = db_query_bound($query);
 
 $versions = array();
 while ($row = db_fetch_array($result))
 {
-	if ($row["target_version"])
+	if ($row["version"])
 	{
-		$versions[] = $row["target_version"];
+		$versions[] = $row["version"];
 	}
 }
 
