@@ -1,0 +1,17 @@
+<?php
+
+# Copyright (c) 2011 John Reese
+# Licensed under the MIT license
+
+$s_plugin_Scrum_ = '';
+$s_plugin_Scrum_title = 'Scrum';
+$s_plugin_Scrum_description = 'Tablica Scrum wg statusów, priorytetów i wersji docelowych';
+
+$s_plugin_Scrum_board = 'Tablica Scrum';
+$s_plugin_Scrum_all = 'Wszystkie';
+
+$s_plugin_Scrum_time_weeks = ' tygodni pozostało';
+$s_plugin_Scrum_time_days = ' dni';
+$s_plugin_Scrum_time_hours = ' godzin pozostało';
+$s_plugin_Scrum_time_up = 'Sprint zakończony';
+
