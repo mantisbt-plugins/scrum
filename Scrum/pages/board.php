@@ -3,7 +3,8 @@
 # Copyright (c) 2011 John Reese
 # Licensed under the MIT license
 
-require_once("icon_api.php");
+//require_once("icon_api.php");
+require_api( 'icon_api.php' );
 
 $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects($current_project);
@@ -11,8 +12,8 @@ $project_ids[] = $current_project;
 
 $resolved_threshold = config_get("bug_resolved_status_threshold");
 
-$bug_table = db_get_table("mantis_bug_table");
-$version_table = db_get_table("mantis_project_version_table");
+$bug_table = db_get_table("bug");
+$version_table = db_get_table("project_version");
 
 
 # Fetch list of target versions in use for the given projects
