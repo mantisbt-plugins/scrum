@@ -16,7 +16,7 @@ $version_table = db_get_table("mantis_project_version_table");
 
 
 # Fetch list of target versions in use for the given projects
-$query = "SELECT DISTINCT v.version FROM {$version_table} v JOIN {$bug_table} b ON b.target_version= v.version WHERE v.project_id IN (".join(", ", $project_ids). ") ORDER BY v.date_order DESC";
+$query = "SELECT DISTINCT v.version, b.target_version FROM {$version_table} v JOIN {$bug_table} b ON b.target_version= v.version WHERE v.project_id IN (".join(", ", $project_ids). ") ORDER BY v.date_order DESC";
 
 $result = db_query_bound($query);
 
