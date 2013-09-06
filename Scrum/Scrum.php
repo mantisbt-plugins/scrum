@@ -5,6 +5,9 @@
 
 class ScrumPlugin extends MantisPlugin
 {
+	const TOKEN_SCRUM_VERSION = 101;
+	const TOKEN_SCRUM_CATEGORY = 102;
+	
 	public function register()
 	{
 		$this->name = plugin_lang_get("title");
@@ -58,6 +61,7 @@ class ScrumPlugin extends MantisPlugin
 				90 => "gray",
 			),
 
+			"token_expiry" => 2592000,  # 30 days,
 			"sprint_length" => 1209600, # 14 days (14 * 24 * 60 * 60)
 			"show_empty_status" => OFF,
 		);
