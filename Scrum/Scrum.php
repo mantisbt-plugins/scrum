@@ -7,13 +7,13 @@ class ScrumPlugin extends MantisPlugin
 {
 	const TOKEN_SCRUM_VERSION = 101;
 	const TOKEN_SCRUM_CATEGORY = 102;
-	
+
 	public function register()
 	{
 		$this->name = plugin_lang_get("title");
 		$this->description = plugin_lang_get("description");
 
-		$this->version = "0.1";
+		$this->version = "0.2";
 		$this->requires = array(
 			"MantisCore" => "1.2.6",
 		);
