@@ -315,7 +315,7 @@ $rescolor = $rescolors[$bug->resolution];
 }
 echo category_full_name($bug->category_id, false) ?>
 </p>
-<p class="summary"><?php echo print_bug_link($bug->id) ?>: <?php echo $bug->summary ?></p>
+<p class="summary"><?php echo bug_format_summary( $bug->id, SUMMARY_FIELD ); ?></p>
 <p class="severity" style="background: <?php echo $sevcolor ?>" title="Severity: <?php echo get_enum_element("severity", $bug->severity) ?>"></p>
 <p class="resolution" style="background: <?php echo $rescolor ?>" title="Resolution: <?php echo get_enum_element("resolution", $bug->resolution) ?>"></p>
 <p class="handler"><?php echo $bug->handler_id > 0 ? user_get_name($bug->handler_id) : "" ?></p>
