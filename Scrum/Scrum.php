@@ -23,7 +23,7 @@ class ScrumPlugin extends MantisPlugin
 
 		$this->author = "John Reese";
 		$this->contact = "john@noswap.com";
-		$this->url = "http://noswap.com";
+		$this->url = "https://github.com/mantisbt-plugins/scrum";
 	}
 
 	public function config()
