@@ -282,7 +282,7 @@ html_page_top(plugin_lang_get("board"));
 <tr class="row-category">
 
 <?php foreach ($columns as $column => $statuses): ?>
-<td><?php echo $column ?></th>
+<td><?php echo $column ?></td>
 <?php endforeach ?>
 
 </tr>
