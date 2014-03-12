@@ -299,13 +299,14 @@ html_page_top(plugin_lang_get("board"));
 <tr class="row-category">
 
 <?php foreach ($columns as $column => $statuses): ?>
-<td><?php echo $column ?></td>
+<td><?php echo plugin_lang_get('column_' . $column); ?></td>
 <?php endforeach ?>
 
 </tr>
 
 <tr class="row-1">
 
+<?php $status_enum = config_get('status_enum_string'); ?>
 <?php foreach ($columns as $column => $statuses): ?>
 <td class="scrumcolumn" width="<?php
 	echo ($bug_count > 0) ? $bug_percentage_by_column[$column] : $bug_percentage_by_column; ?>%">
@@ -314,7 +315,11 @@ html_page_top(plugin_lang_get("board"));
 <?php if ($first): $first = false; else: ?>
 <hr/>
 <?php endif ?>
-<?php $status_name = get_enum_element("status", $status); if ($status_name != $column): ?>
+<?php
+	# Display status name only if different from column header
+	$column_enum_val = MantisEnum::getValue($status_enum, $column);
+	if ($column_enum_val != $status):
+?>
 <p class="scrumstatus"><?php echo get_enum_element("status", $status) ?></p>
 <?php endif ?>
 <?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug):

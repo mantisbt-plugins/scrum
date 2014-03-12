@@ -15,3 +15,6 @@ $s_plugin_Scrum_time_days = ' Tage noch';
 $s_plugin_Scrum_time_hours = ' Stunden noch';
 $s_plugin_Scrum_time_up = 'Sprint vorbei';
 
+$s_plugin_Scrum_column_new = 'Neu';
+$s_plugin_Scrum_column_confirmed = 'Bestätigt';
+$s_plugin_Scrum_column_resolved = 'Erledigt';
