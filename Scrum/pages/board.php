@@ -171,6 +171,22 @@ else
 	$resolved_percent = 0;
 }
 
+$bug_percentage_by_column = array();
+foreach ( $columns as $column => $statuses )
+{
+	$bug_count_for_column = 0;
+
+	foreach ( $statuses as $l_status )
+	{
+		if ( array_key_exists( $l_status, $bugs) )
+		{
+			$bug_count_for_column += count( $bugs[$l_status] );
+		}
+	}
+
+	$bug_percentage_by_column[$column] = ( $bug_count_for_column / $bug_count ) * 100;
+}
+
 if ($target_version)
 {
 	foreach($project_ids as $project_id)
@@ -276,7 +292,7 @@ html_page_top(plugin_lang_get("board"));
 <tr class="row-1">
 
 <?php foreach ($columns as $column => $statuses): ?>
-<td class="scrumcolumn">
+<td class="scrumcolumn" width="<?php echo $bug_percentage_by_column[$column] ?>%">
 <?php $first = true; foreach ($statuses as $status): ?>
 <?php if (isset($bugs[$status]) || plugin_config_get("show_empty_status")): ?>
 <?php if ($first): $first = false; else: ?>
