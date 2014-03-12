@@ -323,8 +323,8 @@ html_page_top(plugin_lang_get("board"));
 <p class="scrumstatus"><?php echo get_enum_element("status", $status) ?></p>
 <?php endif ?>
 <?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug):
-$sevcolor = $sevcolors[$bug->severity];
-$rescolor = $rescolors[$bug->resolution];
+$sevcolor = array_key_exists($bug->severity, $sevcolors) ? $sevcolors[$bug->severity] : "white";
+$rescolor = array_key_exists($bug->resolution, $rescolors) ? $rescolors[$bug->resolution] : "white";
 ?>
 
 <div class="scrumblock">
