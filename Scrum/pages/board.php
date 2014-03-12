@@ -116,12 +116,26 @@ if (isset($categories[$category]))
 	$category_ids = $categories[$category];
 }
 
+$columns = plugin_config_get("board_columns");
+$sevcolors = plugin_config_get("board_severity_colors");
+$rescolors = plugin_config_get("board_resolution_colors");
+$sprint_length = plugin_config_get("sprint_length");
+
+# Retrieve all statuses to display on the board
+$statuses = array();
+foreach($columns as $col)
+{
+	$statuses = array_merge($statuses, $col);
+}
+
 $categories_by_project[ $current_project ] = $category;
 token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get('token_expiry') );
 
 # Retrieve all bugs with the matching target version
 $params = array();
-$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ")";
+$query = "SELECT id FROM {$bug_table}
+	WHERE project_id IN (" . join(", ", $project_ids) . ")
+	AND status IN (" . join(", ", $statuses) . ")";
 
 if ($target_version)
 {
@@ -145,10 +159,6 @@ while ($row = db_fetch_array($result))
 bug_cache_array_rows($bug_ids);
 $bugs = array();
 $status = array();
-$columns = plugin_config_get("board_columns");
-$sevcolors = plugin_config_get("board_severity_colors");
-$rescolors = plugin_config_get("board_resolution_colors");
-$sprint_length = plugin_config_get("sprint_length");
 
 $use_source = plugin_is_loaded("Source");
 $resolved_count = 0;
