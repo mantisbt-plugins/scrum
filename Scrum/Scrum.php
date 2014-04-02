@@ -7,7 +7,8 @@ class ScrumPlugin extends MantisPlugin
 {
 	const TOKEN_SCRUM_VERSION = 101;
 	const TOKEN_SCRUM_CATEGORY = 102;
-
+	const TOKEN_SCRUM_TAG = 103;
+  
 	public function register()
 	{
 		$this->name = plugin_lang_get("title");
@@ -21,6 +22,7 @@ class ScrumPlugin extends MantisPlugin
 			"Source" => "0.16",
 		);
 
+    $this->page		= 'config';
 		$this->author = "John Reese";
 		$this->contact = "john@noswap.com";
 		$this->url = "https://github.com/mantisbt-plugins/scrum";
@@ -31,9 +33,14 @@ class ScrumPlugin extends MantisPlugin
 		return array(
 			#$g_status_enum_string = '10:new,20:feedback,30:acknowledged,40:confirmed,50:assigned,80:resolved,90:closed';
 			"board_columns" => array(
-				"New" => array(10, 20, 30),
-				"Confirmed" => array(40, 50),
-				"Resolved" => array(80),
+#				"New" => array(10, 20, 30),
+#				"Confirmed" => array(40, 50),
+#				"Resolved" => array(80),
+				"UnAssigned" => array(10, 20),
+				"Workload" => array(30, 40, 50),
+        "QA Testing" => array(60),
+				"Deliverable" => array(80, 90),
+#				"Closed" => array(90),
 			),
 
 			#$g_severity_enum_string = '10:feature,20:trivial,30:text,40:tweak,50:minor,60:major,70:crash,80:block';
@@ -62,7 +69,8 @@ class ScrumPlugin extends MantisPlugin
 			),
 
 			"token_expiry" => 2592000,  # 30 days,
-			"sprint_length" => 1209600, # 14 days (14 * 24 * 60 * 60)
+#			"sprint_length" => 1209600, # 14 days (14 * 24 * 60 * 60)
+			"sprint_length" => 2419200, # 28 days (28 * 24 * 60 * 60)
 			"show_empty_status" => OFF,
 		);
 	}
