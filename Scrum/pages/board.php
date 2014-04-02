@@ -343,7 +343,11 @@ html_page_top(plugin_lang_get("board"));
       <?php endforeach ?>
 		</select>
 		<select name="tag" id="tag">
-			<?php print_tag_option_list(0, $tag);?>
+			<?php print_tag_option_list();?>
+
+# Following line needs modificatio of print_api.php of mantis
+#			<?php print_tag_option_list(0, $tag);?>
+
     </select>
     <input type="submit" value="Go"/>
   </form>
