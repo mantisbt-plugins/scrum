@@ -58,7 +58,9 @@ div.scrumblock p.commits {
 div.scrumblock p.category {
 	font-weight: bold;
 }
-
+div.scrumblock p.category_finished {
+  background: #FA8258;
+}
 div.scrumblock p.summary {
 	clear: both;
 	width: 100%;
@@ -79,6 +81,9 @@ div.scrumblock p.priority {
 	vertical-align: top;
 }
 
+div.scrumblock p.scrumstatus {
+	text-align: center;
+}
 div.scrumblock p.severity {
 	float: left;
 	width: 1.2em;

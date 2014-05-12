@@ -4,8 +4,18 @@
 # Licensed under the MIT license
 
 $s_plugin_Scrum_ = '';
-$s_plugin_Scrum_title = 'Scrum';
+$s_plugin_Scrum_title = 'Scrum plugin';
 $s_plugin_Scrum_description = 'Scrum board based on status, priority, and target version';
+
+#config options
+$s_plugin_Scrum_config = 'Configuration';
+$s_plugin_Scrum_sprint_length = 'Sprint length (sec)';
+$s_plugin_Scrum_sprint_length_help = 'Total length of a sprint in seconds used when calculating Timeleft progress bar.';
+$s_plugin_Scrum_Token_expiry = 'Token timeout (sec)';
+$s_plugin_Scrum_token_expiry_help = 'Time that the saved version and category settings of the shown scrumboard are valid, and are reused.';
+$s_plugin_Scrum_show_empty_status = 'Show empty status';
+$s_plugin_Scrum_enabled = 'Yes';
+$s_plugin_Scrum_disabled = 'No';
 
 $s_plugin_Scrum_board = 'Scrum Board';
 $s_plugin_Scrum_all = 'All';

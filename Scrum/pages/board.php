@@ -13,6 +13,7 @@ $resolved_threshold = config_get("bug_resolved_status_threshold");
 
 $bug_table = db_get_table("mantis_bug_table");
 $version_table = db_get_table("mantis_project_version_table");
+$tag_table = db_get_table("mantis_bug_tag_table");
 
 # Fetch list of target versions in use for the given projects
 $query = "SELECT DISTINCT v.date_order, v.version, b.target_version
@@ -131,21 +132,52 @@ foreach($columns as $col)
 $categories_by_project[ $current_project ] = $category;
 token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get('token_expiry') );
 
-# Retrieve all bugs with the matching target version
+#Get selected Tag
+$tag = -1;
+$tags_by_project = array();
+$token_tags_by_project = token_get_value(ScrumPlugin::TOKEN_SCRUM_TAG);
+
+if ( !is_null( $token_tags_by_project ) )
+{
+	$tags_by_project = unserialize( $token_tags_by_project );
+}
+
+if ( gpc_isset("tag") )
+{
+	$tag = gpc_get_string("tag", "");
+} else
+{
+	if ( array_key_exists( $current_project, $tags_by_project) )
+	{
+		$tag = $tags_by_project[ $current_project ];
+	}
+}
+
+$tags_by_project[ $current_project ] = $tag;
+token_set( ScrumPlugin::TOKEN_SCRUM_TAG, serialize( $tags_by_project), plugin_config_get('token_expiry') );
+
+
+# Retrieve all bugs with the matching target version, categories and tag
 $params = array();
-$query = "SELECT id FROM {$bug_table}
-	WHERE project_id IN (" . join(", ", $project_ids) . ")
-	AND status IN (" . join(", ", $statuses) . ")";
+$query = "SELECT id FROM {$bug_table} b ";
+
+if ($tag > 0) {
+  $query .= " JOIN {$tag_table} t ON t.bug_id=b.id AND t.tag_id=" . db_param();
+  $params[] = $tag;
+}
+
+$query .= " WHERE b.project_id IN (" . join(", ", $project_ids) . ")";
 
 if ($target_version)
 {
-	$query .= " AND target_version=" . db_param();
+	$query .= " AND b.target_version=" . db_param();
 	$params[] = $target_version;
 }
 if ($category_name)
 {
-	$query .= " AND category_id IN (" . join(", ", $category_ids) . ")";
+	$query .= " AND b.category_id IN (" . join(", ", $category_ids) . ")";
 }
+
 
 $query .= " ORDER BY status ASC, priority DESC, id DESC";
 $result = db_query_bound($query, $params);
@@ -160,9 +192,20 @@ bug_cache_array_rows($bug_ids);
 $bugs = array();
 $status = array();
 
+$rem_work = array();
+$est_work = array();
+$act_work = array();
+$columns = plugin_config_get("board_columns");
+$sevcolors = plugin_config_get("board_severity_colors");
+$rescolors = plugin_config_get("board_resolution_colors");
+$sprint_length = plugin_config_get("sprint_length");
+
 $use_source = plugin_is_loaded("Source");
 $resolved_count = 0;
 
+$rem_work_total = 0;
+$est_work_total = 0;
+$act_work_total = 0;
 foreach ($bug_ids as $bug_id)
 {
 	$bug = bug_get($bug_id);
@@ -173,7 +216,35 @@ foreach ($bug_ids as $bug_id)
 	{
 		$resolved_count++;
 	}
+	$t_field_id = custom_field_get_id_from_name("Rem.Work");
+	$rem_work[$bug_id] = custom_field_get_value($t_field_id, $bug_id);
+	$t_field_id = custom_field_get_id_from_name("Est.Work");
+	$est_work[$bug_id] = custom_field_get_value($t_field_id, $bug_id);
+	$t_field_id = custom_field_get_id_from_name("Act.Work");
+	$act_work[$bug_id] = custom_field_get_value($t_field_id, $bug_id);
+# Patch: BS  24-1-2013 Remaining work is only counted for issues not solved yet, and if remaining work is zero and not resolved than est.work is used
+	if ($bug->status < $resolved_threshold)
+	{
+		$rem_work_total += $rem_work[$bug_id] ;
+    if ($rem_work[$bug_id] <= 0)
+    {
+      $rem_work_total += $est_work[$bug_id];
+    }
+	}
+	$est_work_total += $est_work[$bug_id];
+	$act_work_total += $act_work[$bug_id];
 }
+
+# Patch: BS 2-1-2013 Solved division by zero
+if ($est_work_total > 0)
+{
+  $workleft_percent = floor(100 - 100 * $rem_work_total / $est_work_total);
+}
+else
+{
+  $workleft_percent = 100;
+}
+ 
 
 $bug_count = count($bug_ids);
 if ($bug_count > 0)
@@ -242,6 +313,10 @@ if ($target_version)
 	}
 }
 
+$rem_work_total = round($rem_work_total);
+$est_work_total = round($est_work_total);
+$act_work_total = round($act_work_total);
+
 html_page_top(plugin_lang_get("board"));
 
 ?>
@@ -252,24 +327,30 @@ html_page_top(plugin_lang_get("board"));
 <table class="width100 scrumboard" align="center" cellspacing="1">
 
 <tr>
-<td class="form-title" colspan="<?php echo count($columns) ?>">
-<?php echo plugin_lang_get("board") ?>
-<form action="<?php echo plugin_page("board") ?>" method="get">
-<input type="hidden" name="page" value="Scrum/board"/>
-<select name="version">
-<option value=""><?php echo plugin_lang_get("all") ?></option>
-<?php foreach ($versions as $version): ?>
-<option value="<?php echo string_attribute($version) ?>" <?php if ($version == $target_version) echo 'selected="selected"' ?>><?php echo string_display_line($version) ?></option>
-<?php endforeach ?>
-</select>
-<select name="category">
-<option value=""><?php echo plugin_lang_get("all") ?></option>
-<?php foreach (array_keys($categories) as $category_name): ?>
-<option value="<?php echo $category_name ?>" <?php if ($category == $category_name) echo 'selected="selected"' ?>><?php echo $category_name ?></option>
-<?php endforeach ?>
-</select>
-<input type="submit" value="Go"/>
-</form>
+  <td class="form-title" colspan="<?php echo count($columns) ?>"><?php echo plugin_lang_get("board") ?>
+  <form action="<?php echo plugin_page("board") ?>" method="get">
+    <input type="hidden" name="page" value="Scrum/board"/>
+    <select name="version">
+      <option value=""><?php echo plugin_lang_get("all") ?></option>
+        <?php foreach ($versions as $version): ?>
+          <option value="<?php echo string_attribute($version) ?>" <?php if ($version == $target_version) echo 'selected="selected"' ?>><?php echo string_display_line($version) ?></option>
+        <?php endforeach ?>
+    </select>
+    <select name="category">
+      <option value=""><?php echo plugin_lang_get("all") ?></option>
+      <?php foreach (array_keys($categories) as $category_name): ?>
+        <option value="<?php echo $category_name ?>" <?php if ($category == $category_name) echo 'selected="selected"' ?>><?php echo $category_name ?></option>
+      <?php endforeach ?>
+		</select>
+		<select name="tag" id="tag">
+			<?php print_tag_option_list();?>
+
+# Following line needs modificatio of print_api.php of mantis
+#			<?php print_tag_option_list(0, $tag);?>
+
+    </select>
+    <input type="submit" value="Go"/>
+  </form>
 </td>
 </tr>
 
@@ -277,9 +358,9 @@ html_page_top(plugin_lang_get("board"));
 <td colspan="<?php echo count($columns) ?>">
 <div class="scrumbar">
 <?php if ($resolved_percent > 50): ?>
-<span class="bar" style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+<span class="bar" style="width: <?php echo $resolved_percent ?>%"><?php echo "Task count: {$resolved_count} / {$bug_count} ({$resolved_percent}%)" ?></span>
 <?php else: ?>
-<span class="bar" style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+<span class="bar" style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "Task count: {$resolved_count} / {$bug_count} ({$resolved_percent}%)" ?></span>
 <?php endif ?>
 </div>
 
@@ -292,6 +373,19 @@ html_page_top(plugin_lang_get("board"));
 <?php endif ?>
 </div>
 <?php endif ?>
+
+</td>
+</tr>
+
+<tr>
+<td colspan="<?php echo count($columns) ?>">
+<div class="scrumbar">
+<?php if ($workleft_percent > 50): ?>
+<span class="bar" title="Est/Act/Rem" style="width: <?php echo $workleft_percent ?>%"><?php echo "Work left: {$est_work_total} / {$act_work_total} / {$rem_work_total} ({$workleft_percent}%)" ?></span>
+<?php else: ?>
+<span class="bar" title="Est/Act/Rem" style="width: <?php echo $workleft_percent ?>%">&nbsp;</span><span><?php echo "Work left: {$est_work_total} / {$act_work_total} / {$rem_work_total} ({$workleft_percent}%)" ?></span>
+<?php endif ?>
+</div>
 
 </td>
 </tr>
@@ -323,10 +417,18 @@ $rescolor = $rescolors[$bug->resolution];
 ?>
 
 <div class="scrumblock">
+
 <p class="priority"><?php print_status_icon($bug->priority) ?></p>
 <p class="bugid"></p>
-<p class="commits"><?php echo $source_count[$bug->id] ?></p>
-<p class="category">
+<p class="commits" title="Est/Act/Rem"><?php echo $est_work[$bug->id] ?>/<?php echo $act_work[$bug->id] ?>/<?php echo $rem_work[$bug->id] ?></p>
+
+<?php if ($bug->status >= 80) {
+      echo "<p class=\"category_finished\">"; 
+      } else {
+
+      echo "<p class=\"category\">"; 
+      }
+?>
 <?php if ($bug->project_id != $current_project) {
 	$project_name = project_get_name($bug->project_id);
 	echo "<span class=\"project\">{$project_name}</span> - ";
