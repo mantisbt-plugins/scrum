@@ -15,3 +15,13 @@ $s_plugin_Scrum_time_days = ' days left';
 $s_plugin_Scrum_time_hours = ' hours left';
 $s_plugin_Scrum_time_up = 'Sprint over';
 
+$s_plugin_Scrum_scrum_project = 'Manage Scrum Project';
+
+$s_plugin_Scrum_label_project_version = 'Project - Version';
+
+$s_plugin_Scrum_label_date_start = 'Start Date';
+$s_plugin_Scrum_label_date_end = 'End Date';
+
+$s_plugin_Scrum_bug_estimate = 'Estimate';
+
+$s_plugin_Scrum_complexity_description = 'Complexity';

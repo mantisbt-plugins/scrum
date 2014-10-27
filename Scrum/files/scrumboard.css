@@ -4,6 +4,7 @@ div.scrumbar {
 	border: 1px dotted gray;
 	margin-right: 1em;
 	padding: 0;
+	background: #EBF1F1;
 }
 
 div.scrumbar span {
@@ -18,8 +19,12 @@ div.scrumbar span.bar {
 }
 
 td.scrumcolumn {
+	max-width: 300px;
 	padding: 4px;
 	vertical-align: top;
+	background: #EBF1F1;
+	border-right: 3px solid #DCE7E7;
+	border-left: 3px solid #DCE7E7;
 }
 
 td.scrumcolumn hr {
@@ -31,14 +36,15 @@ td.scrumcolumn hr {
 
 div.scrumblock {
 	float: left;
-	width: 230px;
-	margin: 4px;
-
-	background: #FAF3AA;
-	border: 1px solid black;
-
-	text-align: center;
+	width: 128px;
+	height: 88px;
+	margin: 8px;
+	text-align: left;
 	overflow: hidden;
+	cursor: pointer;
+	border: none;
+	box-shadow: 4px 4px 4px #999;
+	color: darkslategray;
 }
 
 div.scrumblock p {
@@ -56,18 +62,17 @@ div.scrumblock p.commits {
 }
 
 div.scrumblock p.category {
+	font-size: 0.9em !important;
 	font-weight: bold;
 }
 
-div.scrumblock p.summary {
+div.scrumblock div.summary {
 	clear: both;
-	width: 100%;
-	height: 5em;
-	border-top: 1px solid #e7df8a;
-	border-bottom: 1px solid #e7df8a;
+	height: 60px;
 	padding-top: 3px;
 	text-align: left;
 	overflow: hidden;
+	font-size: smaller;
 }
 
 div.scrumblock span.project {
@@ -75,8 +80,14 @@ div.scrumblock span.project {
 }
 
 div.scrumblock p.priority {
-	float: left;
-	vertical-align: top;
+        float: left;
+        vertical-align: top;
+}
+
+div.scrumblock div.priority {
+	position: absolute;
+	margin-left: 110px;
+	margin-top: -20px;
 }
 
 div.scrumblock p.severity {
@@ -91,7 +102,61 @@ div.scrumblock p.resolution {
 	height: 1.2em;
 }
 
-div.scrumblock p.handler {
-	padding-top: 3px;
+div.scrumblock div.handler {
+	vertical-align: middle;
+	position: absolute; margin-left: 103px; margin-top: -93px
 }
 
+.scrumblock:hover{
+	opacity: 0.50;
+}
+
+.scrumblock-improvement{	
+	background: #D3E0E4;
+}
+
+.scrumblock-defect{
+	background: #F69679;
+}
+
+.scrumblock-feature{
+	background: #8CC63F;
+}
+
+.scrumblock-task{
+	background: khaki;
+}
+
+.card-estimate{
+	position: absolute;
+	border: 2px solid #eff;
+	margin-top: -95px;
+	margin-left: -3px;
+	font-weight: bold;
+	font-size: 1em !important;
+	color: white;
+	box-shadow: 1px 1px 5px #666;
+	border-radius: 2px;
+	text-shadow: 0 1px 0 #323231;
+	font-size: .75em;
+	line-height: 14px;
+	-webkit-box-shadow: 1px 1px 5px #666;
+	min-width: 1.2em;
+	display: block;
+}
+
+.card-estimate-feature{
+	background: rgb(49, 125, 0);
+}
+
+.card-estimate-improvement{
+	background: rgb(142, 158, 164);
+}
+
+.card-estimate-bug{
+	background: rgb(187, 62, 25);
+}
+
+.card-estimate-task{
+	background: gold;
+}

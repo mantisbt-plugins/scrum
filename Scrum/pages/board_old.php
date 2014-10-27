@@ -129,10 +129,8 @@ $categories_by_project[ $current_project ] = $category;
 token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get('token_expiry') );
 
 # Retrieve all bugs with the matching target version
-//$date_filter = get_date_filters();
 $params = array();
-$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ";
-//echo $query;
+$query = "SELECT id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ")";
 
 if ($target_version)
 {
@@ -207,9 +205,34 @@ html_page_top(plugin_lang_get("board"));
 <link rel="stylesheet" type="text/css" href="<?php echo plugin_file("scrumboard.css") ?>"/>
 
 <br/>
-<table class="scrumboard" style="width: 100%" align="center" cellspacing="0">
+<table class="scrumboard" style="width: 2400px" align="center" cellspacing="0">
 
-<?php include("board_filters.php"); ?>
+<tr>
+<td class="form-title" colspan="<?php echo count($columns) ?>">
+<?php echo plugin_lang_get("board") ?>
+<form action="<?php echo plugin_page("board") ?>" method="get" name="scrum_form">
+<input type="hidden" name="page" value="Scrum/board"/>
+<select name="version">
+<option value=""><?php echo plugin_lang_get("all") ?></option>
+<?php $released_versions_group = false; ?>
+<?php foreach ($versions as $version): ?>
+<?php $version_text = string_display_line($version); 
+if ($version_info[$version_text]["released"] == 1 && !$released_versions_group){ echo "<optgroup label=\"Released\">"; $released_versions_group = true; }
+?>
+<option value="<?php echo string_attribute($version) ?>" <?php if ($version == $target_version) echo 'selected="selected"' ?>><?php echo $version_text; ?></option>
+<?php endforeach ?>
+<?php if ($released_versions_group){ echo "</optgroup>"; } ?>
+</select>
+<select name="category">
+<option value=""><?php echo plugin_lang_get("all") ?></option>
+<?php foreach (array_keys($categories) as $category_name): ?>
+<option value="<?php echo $category_name ?>" <?php if ($category == $category_name) echo 'selected="selected"' ?>><?php echo $category_name ?></option>
+<?php endforeach ?>
+</select>
+<input type="submit" value="Go"/>
+</form>
+</td>
+</tr>
 
 <tr>
 <td colspan="<?php echo count($columns) ?>">
@@ -238,35 +261,20 @@ html_page_top(plugin_lang_get("board"));
 
 <?php 
 //WARNING!!!! Must allow only ONE STATUS per column because of the drag-n-drop funcionallity
-
-$bug_count = 0;
-
 foreach ($columns as $column => $statuses): 
-	if (! empty($bugs) && !empty($statuses)){
-		if (array_key_exists($statuses[0], $bugs)){
-			$bug_count = count($bugs[$statuses[0]]);
-		}
-	}
+	$bug_count = count($bugs[$statuses[0]]);
 ?>
-<td style="color: #0a6283; background: rgba(255,255,255,.6);"><?php echo strtoupper($column); if (array_key_exists($statuses[0], $bugs) && $bugs[$statuses[0]] != null) echo " (".$bug_count.")"; else { echo " (0)"; } ?></th>
+<td style="color: #0a6283; background: rgba(255,255,255,.6);"><?php echo strtoupper($column); if ($bugs[$statuses[0]] != null) echo " (".$bug_count.")"; else { echo " (0)"; } ?></th>
 <?php endforeach ?>
 
 </tr>
 
 <tr class="row-1">
 
-<?php 
-
-$bug_count = 0;
-
-foreach ($columns as $column => $statuses): 
-	if (! empty($bugs) && !empty($statuses)){
-		if (array_key_exists($statuses[0], $bugs)){
-			$bug_count = count($bugs[$statuses[0]]);
-		}
-	}
+<?php foreach ($columns as $column => $statuses): 
+	$bug_count = count($bugs[$statuses[0]]);
 ?>
-	<td id="scrumcolumn_<?php echo $column; ?>" class="scrumcolumn" ondrop="drop(event)" ondragover="allowDrop(event)" columnstatus="<?php echo $statuses[0]; ?>" >
+<td id="scrumcolumn_<?php echo $column; ?>" class="scrumcolumn" ondrop="drop(event)" ondragover="allowDrop(event)" columnstatus="<?php echo $statuses[0]; ?>" style="max-width: <?php echo ($bug_count > 3)?(40*$bug_count):300; ?>">
 <?php $first = true; foreach ($statuses as $status): ?>
 <?php if (isset($bugs[$status]) || plugin_config_get("show_empty_status")): ?>
 <?php if ($first): $first = false; else: ?>

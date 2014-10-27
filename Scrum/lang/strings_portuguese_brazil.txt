@@ -1,0 +1,29 @@
+<?php
+
+# Copyright (c) 2011 John Reese
+# Licensed under the MIT license
+
+$s_plugin_Scrum_ = '';
+$s_plugin_Scrum_title = 'Scrum';
+$s_plugin_Scrum_description = 'Quadro Scrum baseado no status, prioridade, e versão.';
+
+$s_plugin_Scrum_board = 'Quadro Scrum';
+$s_plugin_Scrum_all = 'Todos';
+
+$s_plugin_Scrum_time_weeks = ' semanas faltando';
+$s_plugin_Scrum_time_days = ' dias faltando';
+$s_plugin_Scrum_time_hours = ' horas faltando';
+$s_plugin_Scrum_time_up = 'Sprint finalizada';
+
+$s_plugin_Scrum_scrum_project = 'Gerenciar Projeto SCRUM';
+
+$s_plugin_Scrum_label_project_version = 'Projeto - Versão';
+
+$s_plugin_Scrum_label_date_start = 'Data Início';
+$s_plugin_Scrum_label_date_end = 'Data Final';
+
+$s_plugin_Scrum_bug_estimate = 'Estimativa';
+
+$s_plugin_Scrum_complexity_description = 'Complexidade';
+
+$s_plugin_Scrum_New = 'Novo';
