@@ -11,3 +11,5 @@ This fork enchances the plugin by:
 * Show priority icon
 * Order cards by priority
 * Define colors to the cards based on the bug category
+* Added PT-BR translation
+* Added estimate on cards
