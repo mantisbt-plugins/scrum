@@ -12,7 +12,7 @@ class ScrumPlugin extends MantisPlugin
 		$this->name = plugin_lang_get("title");
 		$this->description = plugin_lang_get("description");
 
-		$this->version = "0.3";
+		$this->version = "0.2";
 		$this->requires = array(
 			"MantisCore" => "1.2.6",
 		);
@@ -70,11 +70,8 @@ class ScrumPlugin extends MantisPlugin
 			
 			#Set the categories ID's wich represent features, improvements, tasks and bugs
 			"bug_category_feature" => array(2, 24, 25),
-
-			"bug_category_improvement" => array(3, 26, 27, 51, 52, 53),
-	
+			"bug_category_improvement" => array(3, 26, 27, 51, 52, 53),	
 			"bug_category_task" => array(4, 28, 29),
-
 			"bug_category_defect" => array(5, 9, 22, 23),
 
 			"token_expiry" => 2592000,  # 30 days,
@@ -121,10 +118,10 @@ class ScrumPlugin extends MantisPlugin
 			"EVENT_MENU_MAIN" => "menu",
 			"EVENT_MENU_MANAGE" => "menu_manage",
 			"EVENT_REPORT_BUG_FORM" => "prepare_bug_report",
-            "EVENT_UPDATE_BUG_FORM" => "prepare_bug_update",
-            "EVENT_UPDATE_BUG_STATUS_FORM" => "prepare_bug_status_update",
+            		"EVENT_UPDATE_BUG_FORM" => "prepare_bug_update",
+		        "EVENT_UPDATE_BUG_STATUS_FORM" => "prepare_bug_status_update",
 			"EVENT_UPDATE_BUG" => "save_bug",
-            "EVENT_REPORT_BUG" => "save_bug",
+            		"EVENT_REPORT_BUG" => "save_bug",
 			"EVENT_VIEW_BUG_DETAILS" => "view_bug_details",
 		);
 	}
