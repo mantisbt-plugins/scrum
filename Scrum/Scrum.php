@@ -20,9 +20,9 @@ class ScrumPlugin extends MantisPlugin
 			"Source" => "0.16",
 		);
 
-		$this->author = "Ralph Rassweiler";
-		$this->contact = "ralphrass@gmail.com";
-		$this->url = "http://ralphrass.wordpress.com";
+		$this->author = "John Reese";
+		$this->contact = "john@noswap.com";
+		$this->url = "https://github.com/mantisbt-plugins/scrum";
 	}
 
 	public function config(){
