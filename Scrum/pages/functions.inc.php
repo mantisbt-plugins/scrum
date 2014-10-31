@@ -50,33 +50,35 @@
 
 	function calculate_time_diff($version_id, $sprint_length){
 
+		global $timeleft_percent;
+
 		$version = version_get($version_id);
-        	$version_date = $version->date_order;
-	        $now = time();
+    	$version_date = $version->date_order;
+        $now = time();
 
-        	$time_diff = $version_date - $now;
-	        $time_hours = floor($time_diff / 3600);
-	        $time_days = floor($time_diff / 86400);
-        	$time_weeks = floor($time_diff / 604800);
+    	$time_diff = $version_date - $now;
+        $time_hours = floor($time_diff / 3600);
+        $time_days = floor($time_diff / 86400);
+    	$time_weeks = floor($time_diff / 604800);
 
-        	$timeleft_percent = min(100, 100 - floor(100 * $time_diff / $sprint_length));
+    	$timeleft_percent = min(100, 100 - floor(100 * $time_diff / $sprint_length));
 
-	        if ($time_diff <= 0)
-        	{
-                	$timeleft_string = plugin_lang_get("time_up");
-	        }
-        	else if ($time_weeks > 1)
-	        {
-        	        $timeleft_string = $time_weeks . plugin_lang_get("time_weeks");
-	        }
-        	else if ($time_days > 1)
-	        {
-        	        $timeleft_string = $time_days . plugin_lang_get("time_days");
-	        }
-        	else if ($time_hours > 1)
-	        {
-        	        $timeleft_string = $time_hours . plugin_lang_get("time_hours");
-	        }
+        if ($time_diff <= 0)
+    	{
+            	$timeleft_string = plugin_lang_get("time_up");
+        }
+    	else if ($time_weeks > 1)
+        {
+    	        $timeleft_string = $time_weeks . plugin_lang_get("time_weeks");
+        }
+    	else if ($time_days > 1)
+        {
+    	        $timeleft_string = $time_days . plugin_lang_get("time_days");
+        }
+    	else if ($time_hours > 1)
+        {
+    	        $timeleft_string = $time_hours . plugin_lang_get("time_hours");
+        }
 
 		return $timeleft_string;
 	}
@@ -114,36 +116,42 @@
 		return $resolved_count;
 	}
 
-	/*function get_date_filters(){
-		
-		$date_filters = "";
-		$table = plugin_table('project');
-		$stmt = " AND target_version IN (SELECT version FROM mantis_project_version_table WHERE id IN (SELECT version_id FROM $table WHERE ";
-		$start_date = $_GET["version_start_date"];
-		$end_date = $_GET["version_end_date"];
-		$has_start = false;
+	function calculate_resolved_percent($bug_ids, $resolved_count){
 
-		if ( (isset($start_date) && !empty($start_date)) || (isset($end_date) && !empty($end_date)) ){
-			
-			$date_filters = $stmt;
+		global $bug_count;
 
-			if (isset($start_date) && !empty($start_date)){
-			
-				$date_filters .= "date_start >= ".mktime(0,0,0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4))." ";
-				$has_start = true;
-			}
+		$bug_count = count($bug_ids);
 
-			if (isset($end_date) && !empty($end_date)){
-
-				if ($has_start){
-					$date_filters .= " AND ";
-				}
-                                $date_filters .= "date_end <= ".mktime(0,0,0, substr($end_date, 5, 2), substr($end_date, 8, 2), substr($end_date, 0, 4))." ";
-                        }
-
-			$date_filters .= "))";
+		if ($bug_count > 0)
+		{
+			$resolved_percent = floor(100 * $resolved_count / $bug_count);
+		}
+		else
+		{
+			$resolved_percent = 0;
 		}
 
-		return $date_filters;
-	}*/
+		return $resolved_percent;
+	}
+
+	function calculate_time_left($target_version, $project_ids, $sprint_length){
+
+		$timeleft_string = "";
+
+		if ($target_version)
+		{
+			foreach($project_ids as $project_id)
+			{
+				$version_id = version_get_id($target_version, $project_id, true);
+				if ($version_id !== false)
+				{
+					break;
+				}
+			}
+
+			$timeleft_string = calculate_time_diff($version_id, $sprint_length);
+		}
+
+		return $timeleft_string;
+	}
 ?>

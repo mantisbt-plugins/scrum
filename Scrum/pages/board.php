@@ -3,10 +3,7 @@
 
 # Copyright (c) 2011 John Reese
 # Licensed under the MIT license
-
 # Tweaked by Ralph Rassweiler (2014)
-
-//error_reporting(1);
 
 require_once("icon_api.php");
 require_once("functions.inc.php");
@@ -15,7 +12,7 @@ $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects($current_project);
 $project_ids[] = $current_project;
 
-$resolved_threshold = config_get("bug_resolved_status_threshold");
+$timeleft_percent = 0;
 
 $bug_table = db_get_table("mantis_bug_table");
 $version_table = db_get_table("mantis_project_version_table");
@@ -161,9 +158,13 @@ $sevcolors = plugin_config_get("board_severity_colors");
 $rescolors = plugin_config_get("board_resolution_colors");
 $sprint_length = plugin_config_get("sprint_length");
 
-$use_source = plugin_is_loaded("Source");
 $resolved_count = 0;
+$bug_count = 0;
 
+$use_source = plugin_is_loaded("Source");
+$resolved_threshold = config_get("bug_resolved_status_threshold");
+
+#Count resolved bugs
 foreach ($bug_ids as $bug_id)
 {
 	$bug = bug_get($bug_id);
@@ -176,29 +177,11 @@ foreach ($bug_ids as $bug_id)
 	}
 }
 
-$bug_count = count($bug_ids);
-if ($bug_count > 0)
-{
-	$resolved_percent = floor(100 * $resolved_count / $bug_count);
-}
-else
-{
-	$resolved_percent = 0;
-}
+#Calculate resolved percent
+$resolved_percent = calculate_resolved_percent($bug_ids, $resolved_count);
 
-if ($target_version)
-{
-	foreach($project_ids as $project_id)
-	{
-		$version_id = version_get_id($target_version, $project_id, true);
-		if ($version_id !== false)
-		{
-			break;
-		}
-	}
-
-	$timeleft_string = calculate_time_diff($version_id, $sprint_length);
-}
+#Calculate time diff
+$timeleft_string = calculate_time_left($target_version, $project_ids, $sprint_length);
 
 html_page_top(plugin_lang_get("board"));
 
@@ -256,65 +239,8 @@ foreach ($columns as $column => $statuses):
 <tr class="row-1">
 
 <?php 
-
-$bug_count = 0;
-
-foreach ($columns as $column => $statuses): 
-	if (! empty($bugs) && !empty($statuses)){
-		if (array_key_exists($statuses[0], $bugs)){
-			$bug_count = count($bugs[$statuses[0]]);
-		}
-	}
+	include("board_content.php");
 ?>
-	<td id="scrumcolumn_<?php echo $column; ?>" class="scrumcolumn" ondrop="drop(event)" ondragover="allowDrop(event)" columnstatus="<?php echo $statuses[0]; ?>" >
-<?php $first = true; foreach ($statuses as $status): ?>
-<?php if (isset($bugs[$status]) || plugin_config_get("show_empty_status")): ?>
-<?php if ($first): $first = false; else: ?>
-<hr/>
-<?php endif ?>
-<?php if (isset($bugs[$status])) foreach ($bugs[$status] as $bug):
-$sevcolor = $sevcolors[$bug->severity];
-$rescolor = $rescolors[$bug->resolution];
-?>
-
-<div class="scrumblock <?php set_scrumblock_color($bug->category_id); ?>" id="scrumblock_<?php echo $bug->id; ?>"  draggable="true" ondragstart="drag(event)" bugid="<?php echo $bug->id; ?>">
-<!--<p class="priority"><?php //print_status_icon($bug->priority) ?></p>-->
-<p class="bugid"></p>
-<p class="commits"><?php echo $source_count[$bug->id] ?></p>
-<p class="category">
-<?php if ($bug->project_id != $current_project) {
-	$project_name = project_get_name($bug->project_id);
-	echo "<span class=\"project\">{$project_name}</span> - ";
-}
-//echo category_full_name($bug->category_id, false) 
-echo print_bug_link($bug->id) ?>
-</p>
-<div class="summary"><?php //echo print_bug_link($bug->id) ?><?php echo $bug->summary ?>
-</div>
-<!-- <p class="severity" style="background: <?php //echo $sevcolor ?>" title="Severity: <?php //echo get_enum_element("severity", $bug->severity) ?>"></p>-->
-<!-- <p class="resolution" style="background: <?php //echo $rescolor ?>" title="Resolution: <?php //echo get_enum_element("resolution", $bug->resolution) ?>"></p>-->
-<div class="handler">
-	<?php if ($bug->handler_id > 0){ ?>
-		<?php $emailHash = md5( strtolower( trim( user_get_email($bug->handler_id) ) ) ); ?>
-		<img style="vertical-align: inherit" src="http://www.gravatar.com/avatar/<?php echo $emailHash; ?>?s=28&d=mm" />
-	<?php } ?>
-</div>
-<?php 
-	$estimate = 0;
-	$bug_data = ScrumBugDao::getBugData($bug->id); 
-	if ($bug_data != null){ $estimate = $bug_data[0]["estimate"]; }
-?>
-<?php if ($estimate > 0){ ?> 
-	<div class="card-estimate <?php set_card_estimate_style($bug->category_id); ?>"><?php echo $estimate; ?></div>
-<?php } ?>
-<div class="priority"><img src="<?php print_scrumblock_icon($bug->priority); ?>"></div>
-</div>
-
-<?php endforeach ?>
-<?php endif ?>
-<?php endforeach ?>
-</td>
-<?php endforeach ?>
 
 </tr>
 </table>
