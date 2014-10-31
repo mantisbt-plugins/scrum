@@ -118,10 +118,10 @@ class ScrumPlugin extends MantisPlugin
 			"EVENT_MENU_MAIN" => "menu",
 			"EVENT_MENU_MANAGE" => "menu_manage",
 			"EVENT_REPORT_BUG_FORM" => "prepare_bug_report",
-            		"EVENT_UPDATE_BUG_FORM" => "prepare_bug_update",
-		        "EVENT_UPDATE_BUG_STATUS_FORM" => "prepare_bug_status_update",
+            "EVENT_UPDATE_BUG_FORM" => "prepare_bug_update",
+            "EVENT_UPDATE_BUG_STATUS_FORM" => "prepare_bug_status_update",
 			"EVENT_UPDATE_BUG" => "save_bug",
-            		"EVENT_REPORT_BUG" => "save_bug",
+            "EVENT_REPORT_BUG" => "save_bug",
 			"EVENT_VIEW_BUG_DETAILS" => "view_bug_details",
 		);
 	}
