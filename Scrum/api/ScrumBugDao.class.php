@@ -6,7 +6,7 @@ class ScrumBugDao{
 		
                 if (!empty($bug_id)){
 
-                        $sql = 'SELECT b.estimate, b.bug_complexity_id 
+                        $sql = 'SELECT b.estimate 
                                 FROM '.plugin_table('bug_data').' b 
                                 WHERE b.bug_id = '.$bug_id.' ';
 
@@ -24,7 +24,7 @@ class ScrumBugDao{
                 return $result;
         }
 
-	static function saveBug($bug_id = 0, $estimate = 0, $complexity_id = 0){
+	static function saveBug($bug_id = 0, $estimate = 0){
 
                 if ($bug_id > 0){
 
@@ -32,7 +32,7 @@ class ScrumBugDao{
                         db_query_bound($sql);
 
                         $sql = 'INSERT INTO '.plugin_table("bug_data").'
-                                VALUES('.$bug_id.', '.$estimate.', '.$complexity_id.') ';
+                                VALUES('.$bug_id.', '.$estimate.') ';
                         db_query_bound($sql);
                 }
         }

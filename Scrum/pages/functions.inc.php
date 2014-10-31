@@ -87,15 +87,15 @@
 
 		global $FEATURE_IDS, $DEFECT_IDS, $IMPROVEMENT_IDS, $TASK_IDS;
 
-                if (in_array($bug_category_id, $FEATURE_IDS)){
-                        echo FEATURE_ESTIMATE_CLASS;
-                } else if (in_array($bug_category_id, $DEFECT_IDS)) {
-                        echo DEFECT_ESTIMATE_CLASS;
-                } else if (in_array($bug_category_id, $IMPROVEMENT_IDS)) {
-                        echo IMPROVEMENT_ESTIMATE_CLASS;
-                } else if (in_array($bug_category_id, $TASK_IDS)) {
-                        echo TASK_ESTIMATE_CLASS;
-                } else {
+        if (in_array($bug_category_id, $FEATURE_IDS)){
+                echo FEATURE_ESTIMATE_CLASS;
+        } else if (in_array($bug_category_id, $DEFECT_IDS)) {
+                echo DEFECT_ESTIMATE_CLASS;
+        } else if (in_array($bug_category_id, $IMPROVEMENT_IDS)) {
+                echo IMPROVEMENT_ESTIMATE_CLASS;
+        } else if (in_array($bug_category_id, $TASK_IDS)) {
+                echo TASK_ESTIMATE_CLASS;
+        } else {
 			echo "";
 		}
 	}
