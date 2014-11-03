@@ -214,31 +214,32 @@ if ($target_version)
 	}
 
 	$version = version_get($version_id);
-	$version_date = $version->date_order;
-	$now = time();
+	$time_diff = $version->date_order - time();
+	$timeleft_percent = 100 - min( 100, 100 * $time_diff / $sprint_length );
 
-	$time_diff = $version_date - $now;
-	$time_hours = floor($time_diff / 3600);
-	$time_days = floor($time_diff / 86400);
-	$time_weeks = floor($time_diff / 604800);
-
-	$timeleft_percent = min(100, 100 - floor(100 * $time_diff / $sprint_length));
-
-	if ($time_diff <= 0)
-	{
-		$timeleft_string = plugin_lang_get("time_up");
+	if( $time_diff >= (2 * ScrumPlugin::DURATION_WEEK ) ) {
+		$timeleft_string = sprintf(
+			plugin_lang_get( 'time_weeks' ),
+			floor( $time_diff / ScrumPlugin::DURATION_WEEK )
+		);
 	}
-	else if ($time_weeks > 1)
-	{
-		$timeleft_string = $time_weeks . plugin_lang_get("time_weeks");
+	elseif( $time_diff >= ( 2 * ScrumPlugin::DURATION_DAY ) ) {
+		$timeleft_string = sprintf(
+			plugin_lang_get( 'time_days' ),
+			floor( $time_diff / ScrumPlugin::DURATION_DAY )
+		);
 	}
-	else if ($time_days > 1)
-	{
-		$timeleft_string = $time_days . plugin_lang_get("time_days");
+	elseif( $time_diff > ScrumPlugin::DURATION_HOUR ) {
+		$timeleft_string = sprintf(
+			plugin_lang_get( 'time_hours' ),
+			floor( $time_diff / ScrumPlugin::DURATION_HOUR )
+		);
 	}
-	else if ($time_hours > 1)
-	{
-		$timeleft_string = $time_hours . plugin_lang_get("time_hours");
+	elseif( $time_diff > 0 ) {
+		$timeleft_string = plugin_lang_get( 'time_1hour' );
+	}
+	else {
+		$timeleft_string = plugin_lang_get( 'time_up' );
 	}
 }
 
@@ -355,4 +356,3 @@ echo category_full_name($bug->category_id, false) ?>
 
 <?php
 html_page_bottom();
-
