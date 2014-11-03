@@ -8,6 +8,11 @@ class ScrumPlugin extends MantisPlugin
 	const TOKEN_SCRUM_VERSION = 101;
 	const TOKEN_SCRUM_CATEGORY = 102;
 
+	# Duration constants (in seconds)
+	const DURATION_HOUR = 3600;
+	const DURATION_DAY = 86400;
+	const DURATION_WEEK = 604800;
+
 	public function register()
 	{
 		$this->name = plugin_lang_get("title");
@@ -61,8 +66,8 @@ class ScrumPlugin extends MantisPlugin
 				90 => "gray",
 			),
 
-			"token_expiry" => 2592000,  # 30 days,
-			"sprint_length" => 1209600, # 14 days (14 * 24 * 60 * 60)
+			"token_expiry" => 30 * ScrumPlugin::DURATION_DAY,
+			"sprint_length" => 14 * ScrumPlugin::DURATION_DAY,
 			"show_empty_status" => OFF,
 		);
 	}
