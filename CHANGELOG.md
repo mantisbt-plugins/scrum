@@ -1,5 +1,11 @@
 ## Scrum plugin Revision History
 
+### v0.3 - 2014-11-10
+- Configuration page
+- Fall back to default color for undefined severity/resolution
+- Board column headers can now be localized
+- Fix bug in 'time left' calculation and improve display
+
 ### v0.2 - 2014-03-12
 - Translations
 - Scrum Board layout improvements

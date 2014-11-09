@@ -19,7 +19,7 @@ class ScrumPlugin extends MantisPlugin
 		$this->description = plugin_lang_get("description");
 		$this->page = 'config_page';
 
-		$this->version = "0.2";
+		$this->version = "0.3";
 		$this->requires = array(
 			"MantisCore" => "1.2.6",
 		);
