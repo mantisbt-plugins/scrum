@@ -3,21 +3,21 @@
 # Copyright (c) 2014 Damien Regad
 # Licensed under the MIT license
 
-auth_reauthenticate( );
+auth_reauthenticate();
 access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 
 html_page_top( plugin_lang_get( 'config_title' ) );
 
-print_manage_menu( );
+print_manage_menu();
 ?>
 
 <br>
-<form action="<?php echo plugin_page("config") ?>" method="post">
-<?php echo form_security_field("plugin_Scrum_config") ?>
+<form action="<?php echo plugin_page( 'config' ) ?>" method="post">
+<?php echo form_security_field( 'plugin_Scrum_config' ) ?>
 <table class="width60" align="center">
 
 <tr>
-	<td class="form-title" colspan="2"><?php echo plugin_lang_get("config_title") ?></td>
+	<td class="form-title" colspan="2"><?php echo plugin_lang_get( 'config_title' ) ?></td>
 </tr>
 
 <!-- Board columns -->
