@@ -25,8 +25,7 @@ $query = "SELECT DISTINCT v.date_order, v.version, b.target_version
 $result = db_query_bound( $query );
 
 $versions = array();
-while( $row = db_fetch_array( $result ) )
-{
+while( $row = db_fetch_array( $result ) ) {
 	if( $row['version'] ) {
 		$versions[] = $row['version'];
 	}
@@ -39,20 +38,15 @@ if( !is_null( $token_versions_by_project ) ) {
 	$versions_by_project = unserialize( $token_versions_by_project );
 }
 
-if( gpc_isset( 'version' ) )
-{
+if( gpc_isset( 'version' ) ) {
 	$target_version = gpc_get_string( 'version', '' );
-}
-else
-{
-	if( array_key_exists( $current_project, $versions_by_project) )
-	{
+} else {
+	if( array_key_exists( $current_project, $versions_by_project) ) {
 		$target_version = $versions_by_project[$current_project];
 	}
 }
 
-if( !in_array( $target_version, $versions ) )
-{
+if( !in_array( $target_version, $versions ) ) {
 	$target_version = '' ;
 }
 
@@ -63,8 +57,7 @@ $t_res = token_set( ScrumPlugin::TOKEN_SCRUM_VERSION, serialize( $versions_by_pr
 $params = array();
 $query = "SELECT DISTINCT category_id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ";
 
-if( $target_version )
-{
+if( $target_version ) {
 	$query .= "AND target_version=" . db_param();
 	$params[] = $target_version;
 }
@@ -88,24 +81,19 @@ while( $row = db_fetch_array( $result ) ) {
 $categories_by_project = array();
 $token_categories_by_project = token_get_value( ScrumPlugin::TOKEN_SCRUM_CATEGORY );
 
-if( !is_null( $token_categories_by_project ) )
-{
+if( !is_null( $token_categories_by_project ) ) {
 	$categories_by_project = unserialize( $token_categories_by_project );
 }
 
-if( gpc_isset( 'category' ) )
-{
+if( gpc_isset( 'category' ) ) {
 	$category = gpc_get_string( 'category', '' );
-} else
-{
-	if( array_key_exists( $current_project, $categories_by_project) )
-	{
+} else {
+	if( array_key_exists( $current_project, $categories_by_project) ) {
 		$category = $categories_by_project[$current_project];
 	}
 }
 
-if( isset( $categories[$category] ) )
-{
+if( isset( $categories[$category] ) ) {
 	$category_ids = $categories[$category];
 }
 
@@ -116,8 +104,7 @@ $sprint_length = plugin_config_get( 'sprint_length' );
 
 # Retrieve all statuses to display on the board
 $statuses = array();
-foreach( $columns as $col )
-{
+foreach( $columns as $col ) {
 	$statuses = array_merge( $statuses, $col );
 }
 
@@ -173,8 +160,7 @@ if( $category_name ) {
 $query .= ' ORDER BY status ASC, priority DESC, id DESC';
 $result = db_query_bound( $query, $params );
 $bug_ids = array();
-while( $row = db_fetch_array( $result ) )
-{
+while( $row = db_fetch_array( $result ) ) {
 	$bug_ids[] = $row['id'];
 }
 
@@ -185,52 +171,41 @@ $status = array();
 $use_source = plugin_is_loaded( 'Source' );
 $resolved_count = 0;
 
-foreach( $bug_ids as $bug_id )
-{
+foreach( $bug_ids as $bug_id ) {
 	$bug = bug_get( $bug_id );
 	$bugs[$bug->status][] = $bug;
 
 	$source_count[$bug_id] = $use_source ? count( SourceChangeset::load_by_bug( $bug_id ) ) : '' ;
-	if( $bug->status >= $resolved_threshold )
-	{
+	if( $bug->status >= $resolved_threshold ) {
 		$resolved_count++;
 	}
 }
 
 $bug_count = count( $bug_ids );
-if( $bug_count > 0 )
-{
+if( $bug_count > 0 ) {
 	$resolved_percent = floor( 100 * $resolved_count / $bug_count );
 
 	$bug_percentage_by_column = array();
-	foreach( $columns as $column => $statuses )
-	{
+	foreach( $columns as $column => $statuses ) {
 		$bug_count_for_column = 0;
 
-		foreach( $statuses as $l_status )
-		{
-			if( array_key_exists( $l_status, $bugs ) )
-			{
+		foreach( $statuses as $l_status ) {
+			if( array_key_exists( $l_status, $bugs ) ) {
 				$bug_count_for_column += count( $bugs[$l_status] );
 			}
 		}
 
 		$bug_percentage_by_column[$column] = $bug_count_for_column / $bug_count * 100;
 	}
-}
-else
-{
+} else {
 	$resolved_percent = 0;
 	$bug_percentage_by_column = 100 / count( $columns );
 }
 
-if( $target_version )
-{
-	foreach( $project_ids as $project_id )
-	{
+if( $target_version ) {
+	foreach( $project_ids as $project_id ) {
 		$version_id = version_get_id( $target_version, $project_id, true );
-		if( $version_id !== false )
-		{
+		if( $version_id !== false ) {
 			break;
 		}
 	}
@@ -244,23 +219,19 @@ if( $target_version )
 			plugin_lang_get( 'time_weeks' ),
 			floor( $time_diff / ScrumPlugin::DURATION_WEEK )
 		);
-	}
-	elseif( $time_diff >= ( 2 * ScrumPlugin::DURATION_DAY ) ) {
+	} elseif( $time_diff >= ( 2 * ScrumPlugin::DURATION_DAY ) ) {
 		$timeleft_string = sprintf(
 			plugin_lang_get( 'time_days' ),
 			floor( $time_diff / ScrumPlugin::DURATION_DAY )
 		);
-	}
-	elseif( $time_diff > ScrumPlugin::DURATION_HOUR ) {
+	} elseif( $time_diff > ScrumPlugin::DURATION_HOUR ) {
 		$timeleft_string = sprintf(
 			plugin_lang_get( 'time_hours' ),
 			floor( $time_diff / ScrumPlugin::DURATION_HOUR )
 		);
-	}
-	elseif( $time_diff > 0 ) {
+	} elseif( $time_diff > 0 ) {
 		$timeleft_string = plugin_lang_get( 'time_1hour' );
-	}
-	else {
+	} else {
 		$timeleft_string = plugin_lang_get( 'time_up' );
 	}
 }
