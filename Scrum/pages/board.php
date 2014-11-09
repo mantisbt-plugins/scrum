@@ -73,22 +73,15 @@ if ($target_version)
 $result = db_query_bound($query, $params);
 $categories = array();
 $category_ids = array();
-while ($row = db_fetch_array($result))
-{
-	if ($row["category_id"])
-	{
-		$category_id = $row["category_id"];
-		$category_ids[] = $category_id;
-		$category_name = category_full_name($category_id, false);
+while( $row = db_fetch_array( $result ) ) {
+	$category_id = $row['category_id'];
+	$category_ids[] = $category_id;
+	$category_name = category_full_name( $category_id, false );
 
-		if (isset($categories[$category_name]))
-		{
-			$categories[$category_name][] = $category_id;
-		}
-		else
-		{
-			$categories[$category_name] = array($category_id);
-		}
+	if( isset( $categories[$category_name] ) ) {
+		$categories[$category_name][] = $category_id;
+	} else {
+		$categories[$category_name] = array( $category_id );
 	}
 }
 
