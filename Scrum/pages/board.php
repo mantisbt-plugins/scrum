@@ -3,17 +3,17 @@
 # Copyright (c) 2011 John Reese
 # Licensed under the MIT license
 
-require_once("icon_api.php");
+require_once( 'icon_api.php' );
 
 $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects($current_project);
 $project_ids[] = $current_project;
 
-$resolved_threshold = config_get("bug_resolved_status_threshold");
+$resolved_threshold = config_get( 'bug_resolved_status_threshold' );
 
-$bug_table = db_get_table("mantis_bug_table");
-$version_table = db_get_table("mantis_project_version_table");
-$tag_table = db_get_table("mantis_bug_tag_table");
+$bug_table = db_get_table( 'mantis_bug_table' );
+$version_table = db_get_table( 'mantis_project_version_table' );
+$tag_table = db_get_table( 'mantis_bug_tag_table' );
 
 # Fetch list of target versions in use for the given projects
 $query = "SELECT DISTINCT v.date_order, v.version, b.target_version
@@ -27,9 +27,9 @@ $result = db_query_bound($query);
 $versions = array();
 while ($row = db_fetch_array($result))
 {
-	if ($row["version"])
+	if ($row['version'])
 	{
-		$versions[] = $row["version"];
+		$versions[] = $row['version'];
 	}
 }
 
@@ -40,24 +40,24 @@ if( !is_null( $token_versions_by_project ) ) {
 	$versions_by_project = unserialize( $token_versions_by_project );
 }
 
-if ( gpc_isset("version") )
+if ( gpc_isset( 'version' ) )
 {
-	$target_version = gpc_get_string("version", "");
+	$target_version = gpc_get_string( 'version', '' );
 }
 else
 {
 	if ( array_key_exists( $current_project, $versions_by_project) )
 	{
-		$target_version = $versions_by_project[ $current_project ];
+		$target_version = $versions_by_project[$current_project];
 	}
 }
 
 if (!in_array($target_version, $versions))
 {
-	$target_version = "";
+	$target_version = '' ;
 }
 
-$versions_by_project[ $current_project ] = $target_version;
+$versions_by_project[$current_project] = $target_version;
 $t_res = token_set( ScrumPlugin::TOKEN_SCRUM_VERSION, serialize( $versions_by_project ), plugin_config_get('token_expiry') );
 
 # Fetch list of categories in use for the given projects
@@ -94,14 +94,14 @@ if ( !is_null( $token_categories_by_project ) )
 	$categories_by_project = unserialize( $token_categories_by_project );
 }
 
-if ( gpc_isset("category") )
+if ( gpc_isset( 'category' ) )
 {
-	$category = gpc_get_string("category", "");
+	$category = gpc_get_string( 'category', '' );
 } else
 {
 	if ( array_key_exists( $current_project, $categories_by_project) )
 	{
-		$category = $categories_by_project[ $current_project ];
+		$category = $categories_by_project[$current_project];
 	}
 }
 
@@ -110,10 +110,10 @@ if (isset($categories[$category]))
 	$category_ids = $categories[$category];
 }
 
-$columns = plugin_config_get("board_columns");
-$sevcolors = plugin_config_get("board_severity_colors");
-$rescolors = plugin_config_get("board_resolution_colors");
-$sprint_length = plugin_config_get("sprint_length");
+$columns = plugin_config_get( 'board_columns' );
+$sevcolors = plugin_config_get( 'board_severity_colors' );
+$rescolors = plugin_config_get( 'board_resolution_colors' );
+$sprint_length = plugin_config_get( 'sprint_length' );
 
 # Retrieve all statuses to display on the board
 $statuses = array();
@@ -122,7 +122,7 @@ foreach($columns as $col)
 	$statuses = array_merge($statuses, $col);
 }
 
-$categories_by_project[ $current_project ] = $category;
+$categories_by_project[$current_project] = $category;
 token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get('token_expiry') );
 
 # Get selected Tag
@@ -176,14 +176,14 @@ $result = db_query_bound( $query, $params );
 $bug_ids = array();
 while ($row = db_fetch_array($result))
 {
-	$bug_ids[] = $row["id"];
+	$bug_ids[] = $row['id'];
 }
 
 bug_cache_array_rows($bug_ids);
 $bugs = array();
 $status = array();
 
-$use_source = plugin_is_loaded("Source");
+$use_source = plugin_is_loaded( 'Source' );
 $resolved_count = 0;
 
 foreach ($bug_ids as $bug_id)
@@ -191,7 +191,7 @@ foreach ($bug_ids as $bug_id)
 	$bug = bug_get($bug_id);
 	$bugs[$bug->status][] = $bug;
 
-	$source_count[$bug_id] = $use_source ? count(SourceChangeset::load_by_bug($bug_id)) : "";
+	$source_count[$bug_id] = $use_source ? count(SourceChangeset::load_by_bug($bug_id)) : '' ;
 	if ($bug->status >= $resolved_threshold)
 	{
 		$resolved_count++;
@@ -266,7 +266,7 @@ if ($target_version)
 	}
 }
 
-html_page_top(plugin_lang_get("board"));
+html_page_top(plugin_lang_get( 'board' ));
 
 ?>
 
