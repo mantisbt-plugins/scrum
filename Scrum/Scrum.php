@@ -17,6 +17,7 @@ class ScrumPlugin extends MantisPlugin
 	{
 		$this->name = plugin_lang_get("title");
 		$this->description = plugin_lang_get("description");
+		$this->page = 'config_page';
 
 		$this->version = "0.2";
 		$this->requires = array(
