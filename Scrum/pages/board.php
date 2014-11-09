@@ -237,7 +237,6 @@ if( $target_version ) {
 }
 
 html_page_top( plugin_lang_get( 'board' ) );
-
 ?>
 
 <link rel= 'stylesheet' type="text/css" href="<?php echo plugin_file( 'scrumboard.css' ) ?>"/>
@@ -245,109 +244,140 @@ html_page_top( plugin_lang_get( 'board' ) );
 <br/>
 <table class="width100 scrumboard" align= 'center' cellspacing="1">
 
-<tr>
-<td class="form-title" colspan="<?php echo count( $columns ) ?>">
-<?php echo plugin_lang_get( 'board' ) ?>
-<form action="<?php echo plugin_page( 'board' ) ?>" method= 'get' >
-<input type= 'hidden' name= 'page' value="Scrum/board"/>
-<select name= 'version' >
-<option value= '' ><?php echo plugin_lang_get( 'all' ) ?></option>
-<?php foreach( $versions as $version ): ?>
-<option value="<?php echo string_attribute($version) ?>" <?php if( $version == $target_version ) echo 'selected= 'selected' ' ?>><?php echo string_display_line( $version ) ?></option>
-<?php endforeach ?>
-</select>
-<select name= 'category' >
-<option value= '' ><?php echo plugin_lang_get( 'all' ) ?></option>
-<?php foreach( array_keys( $categories ) as $category_name ): ?>
-<option value="<?php echo $category_name ?>" <?php if( $category == $category_name ) echo 'selected= 'selected' ' ?>><?php echo $category_name ?></option>
-<?php endforeach ?>
-</select>
-<select name= 'tag' >
-<?php print_tag_option_list( 0, $tag ); ?>
-</select>
-<input type= 'submit' value= 'Go' />
-</form>
-</td>
-</tr>
+	<tr>
+		<td class="form-title" colspan="<?php echo count( $columns ) ?>">
+			<?php echo plugin_lang_get( 'board' ) ?>
+			<form action="<?php echo plugin_page( 'board' ) ?>" method= 'get' >
+				<input type= 'hidden' name= 'page' value="Scrum/board"/>
+				<select name= 'version' >
+					<option value= '' ><?php echo plugin_lang_get( 'all' ) ?></option>
+					<?php foreach( $versions as $version ): ?>
+					<option value="<?php echo string_attribute($version) ?>" <?php
+						check_selected( $version, $target_version ); ?>>
+						<?php echo string_display_line( $version ) ?>
+					</option>
+					<?php endforeach ?>
+				</select>
+				<select name= 'category' >
+					<option value= '' ><?php echo plugin_lang_get( 'all' ) ?></option>
+					<?php foreach( array_keys( $categories ) as $category_name ): ?>
+					<option value="<?php echo $category_name ?>" <?php
+						check_selected( $category, $category_name ); ?>>
+						<?php echo $category_name ?>
+					</option>
+					<?php endforeach ?>
+				</select>
+				<select name= 'tag' >
+					<?php print_tag_option_list( 0, $tag ); ?>
+				</select>
+				<input type= 'submit' value= 'Go' />
+			</form>
+		</td>
+	</tr>
 
-<tr>
-<td colspan="<?php echo count( $columns ) ?>">
-<div class= 'scrumbar' >
-<?php if( $resolved_percent > 50 ): ?>
-<span class= 'bar' style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
-<?php else: ?>
-<span class= 'bar' style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
-<?php endif ?>
-</div>
+	<tr>
+		<td colspan="<?php echo count( $columns ) ?>">
+			<div class= 'scrumbar' >
+				<?php if( $resolved_percent > 50 ): ?>
+				<span class= 'bar' style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+				<?php else: ?>
+				<span class= 'bar' style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+				<?php endif ?>
+			</div>
 
-<?php if( $target_version ): ?>
-<div class= 'scrumbar' >
-<?php if( $timeleft_percent > 50 ): ?>
-<span class= 'bar' style="width: <?php echo $timeleft_percent ?>%"><?php echo $timeleft_string ?></span>
-<?php else: ?>
-<span class= 'bar' style="width: <?php echo $timeleft_percent ?>%">&nbsp;</span><span><?php echo $timeleft_string ?></span>
-<?php endif ?>
-</div>
-<?php endif ?>
+			<?php if( $target_version ): ?>
+			<div class= 'scrumbar' >
+				<?php if( $timeleft_percent > 50 ): ?>
+				<span class= 'bar' style="width: <?php echo $timeleft_percent ?>%"><?php echo $timeleft_string ?></span>
+				<?php else: ?>
+				<span class= 'bar' style="width: <?php echo $timeleft_percent ?>%">&nbsp;</span><span><?php echo $timeleft_string ?></span>
+				<?php endif ?>
+			</div>
+			<?php endif ?>
+		</td>
+	</tr>
 
-</td>
-</tr>
+	<tr class="row-category">
+		<?php foreach( $columns as $column => $statuses ): ?>
+		<td><?php echo plugin_lang_get( 'column_' . $column ); ?></td>
+		<?php endforeach ?>
+	</tr>
 
-<tr class="row-category">
-
-<?php foreach( $columns as $column => $statuses ): ?>
-<td><?php echo plugin_lang_get( 'column_' . $column ); ?></td>
-<?php endforeach ?>
-
-</tr>
-
-<tr class="row-1">
-
-<?php $status_enum = config_get( 'status_enum_string' ); ?>
-<?php foreach( $columns as $column => $statuses ): ?>
-<td class= 'scrumcolumn' width="<?php
-	echo ( $bug_count > 0 ) ? $bug_percentage_by_column[$column] : $bug_percentage_by_column; ?>%">
-<?php $first = true; foreach( $statuses as $status ): ?>
-<?php if( isset( $bugs[$status] ) || plugin_config_get( 'show_empty_status' ) ): ?>
-<?php if( $first ): $first = false; else: ?>
-<hr/>
-<?php endif ?>
+	<tr class="row-1">
 <?php
-	# Display status name only if different from column header
-	$column_enum_val = MantisEnum::getValue( $status_enum, $column );
-	if( $column_enum_val != $status ):
+	$status_enum = config_get( 'status_enum_string' );
+	$first = true;
+
+	foreach( $columns as $column => $statuses ) {
 ?>
-<p class= 'scrumstatus' ><?php echo get_enum_element( 'status' , $status) ?></p>
-<?php endif ?>
-<?php if( isset( $bugs[$status] ) ) foreach( $bugs[$status] as $bug ):
-$sevcolor = array_key_exists( $bug->severity, $sevcolors ) ? $sevcolors[$bug->severity] : 'white' ;
-$rescolor = array_key_exists( $bug->resolution, $rescolors ) ? $rescolors[$bug->resolution] : 'white' ;
+		<td class= 'scrumcolumn' width="<?php
+			echo ( $bug_count > 0 )
+				? $bug_percentage_by_column[$column]
+				: $bug_percentage_by_column; ?>%"><?php
+
+		foreach( $statuses as $status ) {
+			if( isset( $bugs[$status] ) || plugin_config_get( 'show_empty_status' ) ) {
+				if( $first ) {
+					$first = false;
+				} else { ?>
+			<hr/><?php
+				}
+
+				# Display status name only if different from column header
+				$column_enum_val = MantisEnum::getValue( $status_enum, $column );
+
+				if( $column_enum_val != $status ) {
+?>
+			<p class= 'scrumstatus' >
+				<?php echo get_enum_element( 'status' , $status) ?>
+			</p><?php
+				}
+
+				if( isset( $bugs[$status] ) ) {
+					foreach( $bugs[$status] as $bug ) {
+						$sevcolor = array_key_exists( $bug->severity, $sevcolors )
+							? $sevcolors[$bug->severity]
+							: 'white' ;
+						$rescolor = array_key_exists( $bug->resolution, $rescolors )
+							? $rescolors[$bug->resolution]
+							: 'white' ;
+?>
+			<div class= 'scrumblock' >
+				<p class= 'priority' ><?php print_status_icon( $bug->priority ) ?></p>
+				<p class= 'bugid' ></p>
+				<p class= 'commits' ><?php echo $source_count[$bug->id] ?></p>
+				<p class= 'category' ><?php
+						if( $bug->project_id != $current_project ) {
+							$project_name = project_get_name( $bug->project_id );
+							echo '<span class="project">' . $project_name . '</span> - ';
+						}
+						echo category_full_name( $bug->category_id, false ) ?>
+				</p>
+				<p class= 'summary' >
+					<?php echo bug_format_summary( $bug->id, SUMMARY_FIELD ); ?>
+				</p>
+				<p class= 'severity' style="background: <?php echo $sevcolor ?>"
+					title="Severity: <?php echo get_enum_element( 'severity' , $bug->severity) ?>">
+				</p>
+				<p class= 'resolution' style="background: <?php echo $rescolor ?>"
+					title="Resolution: <?php echo get_enum_element( 'resolution' , $bug->resolution) ?>">
+				</p>
+				<p class= 'handler' >
+					<?php echo $bug->handler_id > 0 ? user_get_name( $bug->handler_id ) : '' ?>
+				</p>
+			</div>
+<?php
+					} # foreach
+				} # if
+			} # if
+		} # foreach
+?>
+		</td>
+<?php
+	} # foreach
 ?>
 
-<div class= 'scrumblock' >
-<p class= 'priority' ><?php print_status_icon( $bug->priority ) ?></p>
-<p class= 'bugid' ></p>
-<p class= 'commits' ><?php echo $source_count[$bug->id] ?></p>
-<p class= 'category' >
-<?php if( $bug->project_id != $current_project ) {
-	$project_name = project_get_name( $bug->project_id );
-	echo "<span class=\"project\">{$project_name}</span> - ";
-}
-echo category_full_name( $bug->category_id, false ) ?>
-</p>
-<p class= 'summary' ><?php echo bug_format_summary( $bug->id, SUMMARY_FIELD ); ?></p>
-<p class= 'severity' style="background: <?php echo $sevcolor ?>" title="Severity: <?php echo get_enum_element( 'severity' , $bug->severity) ?>"></p>
-<p class= 'resolution' style="background: <?php echo $rescolor ?>" title="Resolution: <?php echo get_enum_element( 'resolution' , $bug->resolution) ?>"></p>
-<p class= 'handler' ><?php echo $bug->handler_id > 0 ? user_get_name( $bug->handler_id ) : '' ?></p>
-</div>
-
-<?php endforeach ?>
-<?php endif ?>
-<?php endforeach ?>
-</td>
-<?php endforeach ?>
-
-</tr>
+	</tr>
 </table>
 
 <?php
