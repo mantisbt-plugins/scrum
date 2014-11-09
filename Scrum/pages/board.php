@@ -125,29 +125,29 @@ foreach($columns as $col)
 $categories_by_project[ $current_project ] = $category;
 token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get('token_expiry') );
 
-#Get selected Tag
+# Get selected Tag
 $tag = -1;
 $tags_by_project = array();
-$token_tags_by_project = token_get_value(ScrumPlugin::TOKEN_SCRUM_TAG);
+$token_tags_by_project = token_get_value( ScrumPlugin::TOKEN_SCRUM_TAG );
 
-if ( !is_null( $token_tags_by_project ) )
-{
+if( !is_null( $token_tags_by_project ) ) {
 	$tags_by_project = unserialize( $token_tags_by_project );
 }
 
-if ( gpc_isset("tag") )
-{
-	$tag = gpc_get_string("tag", "");
-} else
-{
-	if ( array_key_exists( $current_project, $tags_by_project) )
-	{
-		$tag = $tags_by_project[ $current_project ];
+if( gpc_isset( 'tag' ) ) {
+	$tag = gpc_get_string( 'tag', '' );
+} else {
+	if( array_key_exists( $current_project, $tags_by_project ) ) {
+		$tag = $tags_by_project[$current_project];
 	}
 }
 
-$tags_by_project[ $current_project ] = $tag;
-token_set( ScrumPlugin::TOKEN_SCRUM_TAG, serialize( $tags_by_project), plugin_config_get('token_expiry') );
+$tags_by_project[$current_project] = $tag;
+token_set(
+	ScrumPlugin::TOKEN_SCRUM_TAG,
+	serialize( $tags_by_project ),
+	plugin_config_get( 'token_expiry' )
+);
 
 # Retrieve all bugs with the matching target version, categories and tag
 $params = array();
@@ -162,18 +162,17 @@ if ($tag > 0) {
 $query .= 'WHERE project_id IN (' . join( ', ', $project_ids ) . ')
 	AND status IN (' . join( ', ', $statuses ) . ')';
 
-if ($target_version) {
+if( $target_version ) {
 	$query .= ' AND b.target_version=' . db_param();
 	$params[] = $target_version;
 }
 
-if ($category_name) {
-	$query .= ' AND category_id IN (' . join( ', ', $category_ids) . ')';
+if( $category_name ) {
+	$query .= ' AND category_id IN (' . join( ', ', $category_ids ) . ')';
 }
 
 $query .= ' ORDER BY status ASC, priority DESC, id DESC';
-$result = db_query_bound($query, $params);
-
+$result = db_query_bound( $query, $params );
 $bug_ids = array();
 while ($row = db_fetch_array($result))
 {
@@ -293,7 +292,7 @@ html_page_top(plugin_lang_get("board"));
 <option value="<?php echo $category_name ?>" <?php if ($category == $category_name) echo 'selected="selected"' ?>><?php echo $category_name ?></option>
 <?php endforeach ?>
 </select>
-<select>
+<select name="tag">
 <?php print_tag_option_list( 0, $tag ); ?>
 </select>
 <input type="submit" value="Go"/>
