@@ -5,6 +5,8 @@ Copyright (c) 2012 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 
 Released under the [MIT license](http://opensource.org/licenses/MIT)
 
+See the [Changelog](https://github.com/mantisbt-plugins/scrum/blob/config/CHANGELOG.md).
+
 
 ## Description
 
@@ -42,24 +44,25 @@ distributed in columns based on their Status.
 
 ### Configuration
 
-At this time, the plugin does not yet include a configuration page;
-this will be added in a future version of the plugin.
+To change the Scrum Board's layout, go to the configuration page, where you
+can define:
 
-To change the Scrum Board's layout, you need to manually edit the
-config() method in `Scrum.php`, or set the parameters using the Manage
-Configuration page:
-
-  - *board_columns* specifies which Status goes into which column;
-    the array's key corresponds to the Board Column, and the value is
-    an array of Status codes as defined in *status_enum_string*.
-  - *board_severity_colors* and *board_resolution_colors* respectively
-    define the colors to use for display of each severity and resolution code.
-  - *token_expiry* determines how long the tokens used to store the filter
-    preferences are kept (in seconds)
-  - *sprint_length* specifies the duration of a sprint (in seconds)
-  - *show_empty_status* when set to ON, the Status name will be displayed in
+  - *Board Columns*: specifies which Status goes into which column;
+    - *Name* is a language-independent code for the Board Column (refer to the
+      language files for the actual display value)
+    - *Status* is a comma-delimited list of Statuses from the Status Enumeration
+      (*status_enum_string*) to include in the Column
+  - *Board Severity Colors* and *Board Resolution Colors* respectively
+    define which color to use for display of each severity and resolution code.
+    It is a comma-delimited list of elements with the form *Code:Color*, the
+    code being the key from the corresponding Enumeration (Severity and
+    Resolution).
+  - *Sprint Length* specifies the duration of a sprint (in days)
+  - *Always show Status* when checked, the Status name will be displayed in
     the Scrum Board's columns even if there are no cards with this Status
-    (defaults to OFF).
+    (unchecked by default).
+  - *Token Expiry* determines how long the plugin will remember the filter
+    criteria on the Scrum Board.
 
 
 ## Support
