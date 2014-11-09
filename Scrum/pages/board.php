@@ -13,6 +13,7 @@ $resolved_threshold = config_get("bug_resolved_status_threshold");
 
 $bug_table = db_get_table("mantis_bug_table");
 $version_table = db_get_table("mantis_project_version_table");
+$tag_table = db_get_table("mantis_bug_tag_table");
 
 # Fetch list of target versions in use for the given projects
 $query = "SELECT DISTINCT v.date_order, v.version, b.target_version
@@ -131,23 +132,53 @@ foreach($columns as $col)
 $categories_by_project[ $current_project ] = $category;
 token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get('token_expiry') );
 
-# Retrieve all bugs with the matching target version
-$params = array();
-$query = "SELECT id FROM {$bug_table}
-	WHERE project_id IN (" . join(", ", $project_ids) . ")
-	AND status IN (" . join(", ", $statuses) . ")";
+#Get selected Tag
+$tag = -1;
+$tags_by_project = array();
+$token_tags_by_project = token_get_value(ScrumPlugin::TOKEN_SCRUM_TAG);
 
-if ($target_version)
+if ( !is_null( $token_tags_by_project ) )
 {
-	$query .= " AND target_version=" . db_param();
+	$tags_by_project = unserialize( $token_tags_by_project );
+}
+
+if ( gpc_isset("tag") )
+{
+	$tag = gpc_get_string("tag", "");
+} else
+{
+	if ( array_key_exists( $current_project, $tags_by_project) )
+	{
+		$tag = $tags_by_project[ $current_project ];
+	}
+}
+
+$tags_by_project[ $current_project ] = $tag;
+token_set( ScrumPlugin::TOKEN_SCRUM_TAG, serialize( $tags_by_project), plugin_config_get('token_expiry') );
+
+# Retrieve all bugs with the matching target version, categories and tag
+$params = array();
+$query = "SELECT id FROM {$bug_table} b ";
+
+if ($tag > 0) {
+	$query .= "JOIN {$tag_table} t ON t.bug_id=b.id AND t.tag_id=" . db_param();
+	$params[] = $tag;
+}
+
+#TODO check sql inject
+$query .= 'WHERE project_id IN (' . join( ', ', $project_ids ) . ')
+	AND status IN (' . join( ', ', $statuses ) . ')';
+
+if ($target_version) {
+	$query .= ' AND b.target_version=' . db_param();
 	$params[] = $target_version;
 }
-if ($category_name)
-{
-	$query .= " AND category_id IN (" . join(", ", $category_ids) . ")";
+
+if ($category_name) {
+	$query .= ' AND category_id IN (' . join( ', ', $category_ids) . ')';
 }
 
-$query .= " ORDER BY status ASC, priority DESC, id DESC";
+$query .= ' ORDER BY status ASC, priority DESC, id DESC';
 $result = db_query_bound($query, $params);
 
 $bug_ids = array();
@@ -268,6 +299,9 @@ html_page_top(plugin_lang_get("board"));
 <?php foreach (array_keys($categories) as $category_name): ?>
 <option value="<?php echo $category_name ?>" <?php if ($category == $category_name) echo 'selected="selected"' ?>><?php echo $category_name ?></option>
 <?php endforeach ?>
+</select>
+<select>
+<?php print_tag_option_list( 0, $tag ); ?>
 </select>
 <input type="submit" value="Go"/>
 </form>

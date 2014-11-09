@@ -7,6 +7,7 @@ class ScrumPlugin extends MantisPlugin
 {
 	const TOKEN_SCRUM_VERSION = 101;
 	const TOKEN_SCRUM_CATEGORY = 102;
+	const TOKEN_SCRUM_TAG = 103;
 
 	# Duration constants (in seconds)
 	const DURATION_HOUR = 3600;
