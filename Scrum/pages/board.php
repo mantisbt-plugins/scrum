@@ -51,11 +51,17 @@ if( !in_array( $target_version, $versions ) ) {
 }
 
 $versions_by_project[$current_project] = $target_version;
-$t_res = token_set( ScrumPlugin::TOKEN_SCRUM_VERSION, serialize( $versions_by_project ), plugin_config_get( 'token_expiry' ) );
+$t_res = token_set(
+	ScrumPlugin::TOKEN_SCRUM_VERSION,
+	serialize( $versions_by_project ),
+	plugin_config_get( 'token_expiry' )
+);
 
 # Fetch list of categories in use for the given projects
 $params = array();
-$query = "SELECT DISTINCT category_id FROM {$bug_table} WHERE project_id IN (" . join(", ", $project_ids) . ") ";
+$query = "SELECT DISTINCT category_id
+	FROM {$bug_table}
+	WHERE project_id IN (" . join(', ', $project_ids) . ") ";
 
 if( $target_version ) {
 	$query .= "AND target_version=" . db_param();
@@ -109,7 +115,11 @@ foreach( $columns as $col ) {
 }
 
 $categories_by_project[$current_project] = $category;
-token_set( ScrumPlugin::TOKEN_SCRUM_CATEGORY, serialize( $categories_by_project), plugin_config_get( 'token_expiry' ) );
+token_set(
+	ScrumPlugin::TOKEN_SCRUM_CATEGORY,
+	serialize( $categories_by_project),
+	plugin_config_get( 'token_expiry' )
+);
 
 # Get selected Tag
 $tag = -1;
@@ -145,19 +155,19 @@ if( $tag > 0 ) {
 }
 
 #TODO check sql inject
-$query .= 'WHERE project_id IN (' . join( ', ', $project_ids ) . ')
-	AND status IN (' . join( ', ', $statuses ) . ')';
+$query .= "WHERE project_id IN (" . join( ', ', $project_ids ) . ")
+	AND status IN (" . join( ', ', $statuses ) . ")";
 
 if( $target_version ) {
-	$query .= ' AND b.target_version=' . db_param();
+	$query .= " AND b.target_version=" . db_param();
 	$params[] = $target_version;
 }
 
 if( $category_name ) {
-	$query .= ' AND category_id IN (' . join( ', ', $category_ids ) . ')';
+	$query .= " AND category_id IN (" . join( ', ', $category_ids ) . ")";
 }
 
-$query .= ' ORDER BY status ASC, priority DESC, id DESC';
+$query .= " ORDER BY status ASC, priority DESC, id DESC";
 $result = db_query_bound( $query, $params );
 $bug_ids = array();
 while( $row = db_fetch_array( $result ) ) {
@@ -175,7 +185,9 @@ foreach( $bug_ids as $bug_id ) {
 	$bug = bug_get( $bug_id );
 	$bugs[$bug->status][] = $bug;
 
-	$source_count[$bug_id] = $use_source ? count( SourceChangeset::load_by_bug( $bug_id ) ) : '' ;
+	$source_count[$bug_id] = $use_source
+		? count( SourceChangeset::load_by_bug( $bug_id ) )
+		: '' ;
 	if( $bug->status >= $resolved_threshold ) {
 		$resolved_count++;
 	}
