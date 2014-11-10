@@ -192,7 +192,7 @@ if( $target_version ) {
 	}
 
 	$version = version_get( $version_id );
-	$time_diff = $version->date_order - time();
+	$time_diff = max( 0, $version->date_order - time() );
 	$timeleft_percent = 100 - min( 100, 100 * $time_diff / $sprint_length );
 
 	if( $time_diff >= ( 2 * ScrumPlugin::DURATION_WEEK ) ) {
@@ -258,7 +258,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 	<tr>
 		<td colspan="<?php echo count( $columns ) ?>">
-			<div class="scrumbar">
+			<div id="resolved_percent" class="scrumbar">
 				<?php if( $resolved_percent > 50 ): ?>
 				<span class="bar" style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
 				<?php else: ?>
@@ -267,12 +267,17 @@ html_page_top( plugin_lang_get( 'board' ) );
 			</div>
 
 			<?php if( $target_version ): ?>
-			<div class="scrumbar">
+			<div id="timeleft_percent" class="scrumbar">
 				<?php if( $timeleft_percent > 50 ): ?>
 				<span class="bar" style="width: <?php echo $timeleft_percent ?>%"><?php echo $timeleft_string ?></span>
 				<?php else: ?>
 				<span class="bar" style="width: <?php echo $timeleft_percent ?>%">&nbsp;</span><span><?php echo $timeleft_string ?></span>
 				<?php endif ?>
+			</div>
+			<?php else: ?>
+			<div id="timeleft_percent" class="scrumbar" >
+				<span class="bar"></span>
+				<span style="width: 100%"><?php echo plugin_lang_get( 'no_sprint' ); ?></span>
 			</div>
 			<?php endif ?>
 		</td>
