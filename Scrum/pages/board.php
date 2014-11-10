@@ -344,7 +344,12 @@ html_page_top( plugin_lang_get( 'board' ) );
 						echo category_full_name( $bug->category_id, false ) ?>
 				</p>
 				<p class="summary">
-					<?php echo bug_format_summary( $bug->id, SUMMARY_FIELD ); ?>
+					<?php
+						echo string_get_bug_view_link( $bug->id )
+							. ': '
+							. bug_format_summary( $bug->id, 0 );
+					?>
+
 				</p>
 				<p class="severity"
 					style="background: <?php echo $sevcolor ?>"
