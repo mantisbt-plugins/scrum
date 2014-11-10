@@ -307,8 +307,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 			</div>
 			<?php else: ?>
 			<div id="timeleft_percent" class="scrumbar" >
-				<span class="bar"></span>
-				<span><?php echo plugin_lang_get( 'no_sprint' ); ?></span>
+				<span style="width: 100%"><?php echo plugin_lang_get( 'no_sprint' ); ?></span>
 			</div>
 			<?php endif ?>
 		</td>
