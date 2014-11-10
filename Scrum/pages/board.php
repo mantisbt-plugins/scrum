@@ -223,7 +223,7 @@ if( $target_version ) {
 	}
 
 	$version = version_get( $version_id );
-	$time_diff = $version->date_order - time();
+	$time_diff = max(0,$version->date_order - time());
 	$timeleft_percent = 100 - min( 100, 100 * $time_diff / $sprint_length );
 
 	if( $time_diff >= ( 2 * ScrumPlugin::DURATION_WEEK ) ) {
@@ -251,18 +251,18 @@ if( $target_version ) {
 html_page_top( plugin_lang_get( 'board' ) );
 ?>
 
-<link rel= 'stylesheet' type="text/css" href="<?php echo plugin_file( 'scrumboard.css' ) ?>"/>
+<link rel="stylesheet" type="text/css" href="<?php echo plugin_file( 'scrumboard.css' ) ?>"/>
 
 <br/>
-<table class="width100 scrumboard" align= 'center' cellspacing="1">
+<table class="width100 scrumboard" align="center" cellspacing="1">
 
 	<tr>
 		<td class="form-title" colspan="<?php echo count( $columns ) ?>">
 			<?php echo plugin_lang_get( 'board' ) ?>
-			<form action="<?php echo plugin_page( 'board' ) ?>" method= 'get' >
-				<input type= 'hidden' name= 'page' value="Scrum/board"/>
-				<select name= 'version' >
-					<option value= '' ><?php echo plugin_lang_get( 'all' ) ?></option>
+			<form action="<?php echo plugin_page( 'board' ) ?>" method="get">
+				<input type="hidden" name="page" value="Scrum/board"/>
+				<select name="version" >
+					<option value="" ><?php echo plugin_lang_get( 'all' ) ?></option>
 					<?php foreach( $versions as $version ): ?>
 					<option value="<?php echo string_attribute($version) ?>" <?php
 						check_selected( $version, $target_version ); ?>>
@@ -270,8 +270,8 @@ html_page_top( plugin_lang_get( 'board' ) );
 					</option>
 					<?php endforeach ?>
 				</select>
-				<select name= 'category' >
-					<option value= '' ><?php echo plugin_lang_get( 'all' ) ?></option>
+				<select name="category">
+					<option value="" ><?php echo plugin_lang_get( 'all' ) ?></option>
 					<?php foreach( array_keys( $categories ) as $category_name ): ?>
 					<option value="<?php echo $category_name ?>" <?php
 						check_selected( $category, $category_name ); ?>>
@@ -279,31 +279,36 @@ html_page_top( plugin_lang_get( 'board' ) );
 					</option>
 					<?php endforeach ?>
 				</select>
-				<select name= 'tag' >
+				<select name="tag" >
 					<?php print_tag_option_list( 0, $tag ); ?>
 				</select>
-				<input type= 'submit' value= 'Go' />
+				<input type="submit" value="Go" />
 			</form>
 		</td>
 	</tr>
 
 	<tr>
 		<td colspan="<?php echo count( $columns ) ?>">
-			<div class= 'scrumbar' >
+			<div id="resolved_percent" class="scrumbar" >
 				<?php if( $resolved_percent > 50 ): ?>
-				<span class= 'bar' style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+				<span class="bar" style="width: <?php echo $resolved_percent ?>%"><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
 				<?php else: ?>
-				<span class= 'bar' style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
+				<span class="bar" style="width: <?php echo $resolved_percent ?>%">&nbsp;</span><span><?php echo "{$resolved_count}/{$bug_count} ({$resolved_percent}%)" ?></span>
 				<?php endif ?>
 			</div>
 
 			<?php if( $target_version ): ?>
-			<div class= 'scrumbar' >
+			<div id="timeleft_percent" class="scrumbar" >
 				<?php if( $timeleft_percent > 50 ): ?>
-				<span class= 'bar' style="width: <?php echo $timeleft_percent ?>%"><?php echo $timeleft_string ?></span>
+				<span class="bar" style="width: <?php echo $timeleft_percent ?>%"><?php echo $timeleft_string ?></span>
 				<?php else: ?>
-				<span class= 'bar' style="width: <?php echo $timeleft_percent ?>%">&nbsp;</span><span><?php echo $timeleft_string ?></span>
+				<span class="bar" style="width: <?php echo $timeleft_percent ?>%">&nbsp;</span><span><?php echo $timeleft_string ?></span>
 				<?php endif ?>
+			</div>
+			<?php else: ?>
+			<div id="timeleft_percent" class="scrumbar" >
+				<span class="bar"></span>
+				<span><?php echo plugin_lang_get( 'no_sprint' ); ?></span>
 			</div>
 			<?php endif ?>
 		</td>
@@ -322,7 +327,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 	foreach( $columns as $column => $statuses ) {
 ?>
-		<td class= 'scrumcolumn' width="<?php
+		<td class="scrumcolumn" width="<?php
 			echo ( $bug_count > 0 )
 				? $bug_percentage_by_column[$column]
 				: $bug_percentage_by_column; ?>%"><?php
@@ -340,7 +345,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 				if( $column_enum_val != $status ) {
 ?>
-			<p class= 'scrumstatus' >
+			<p class="scrumstatus">
 				<?php echo get_enum_element( 'status' , $status) ?>
 			</p><?php
 				}
@@ -354,27 +359,27 @@ html_page_top( plugin_lang_get( 'board' ) );
 							? $rescolors[$bug->resolution]
 							: 'white' ;
 ?>
-			<div class= 'scrumblock' >
-				<p class= 'priority' ><?php print_status_icon( $bug->priority ) ?></p>
-				<p class= 'bugid' ></p>
-				<p class= 'commits' ><?php echo $source_count[$bug->id] ?></p>
-				<p class= 'category' ><?php
+			<div class="scrumblock">
+				<p class="priority"><?php print_status_icon( $bug->priority ) ?></p>
+				<p class="bugid"></p>
+				<p class="commits"><?php echo $source_count[$bug->id] ?></p>
+				<p class="category"><?php
 						if( $bug->project_id != $current_project ) {
 							$project_name = project_get_name( $bug->project_id );
 							echo '<span class="project">' . $project_name . '</span> - ';
 						}
 						echo category_full_name( $bug->category_id, false ) ?>
 				</p>
-				<p class= 'summary' >
+				<p class="summary">
 					<?php echo bug_format_summary( $bug->id, SUMMARY_FIELD ); ?>
 				</p>
-				<p class= 'severity' style="background: <?php echo $sevcolor ?>"
+				<p class="severity" style="background: <?php echo $sevcolor ?>"
 					title="Severity: <?php echo get_enum_element( 'severity' , $bug->severity) ?>">
 				</p>
-				<p class= 'resolution' style="background: <?php echo $rescolor ?>"
+				<p class="resolution" style="background: <?php echo $rescolor ?>"
 					title="Resolution: <?php echo get_enum_element( 'resolution' , $bug->resolution) ?>">
 				</p>
-				<p class= 'handler' >
+				<p class="handler">
 					<?php echo $bug->handler_id > 0 ? user_get_name( $bug->handler_id ) : '' ?>
 				</p>
 			</div>

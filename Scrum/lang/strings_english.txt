@@ -15,6 +15,7 @@ $s_plugin_Scrum_time_days = '%d days left';
 $s_plugin_Scrum_time_hours = '%d hours left';
 $s_plugin_Scrum_time_1hour = 'less than 1 hour left';
 $s_plugin_Scrum_time_up = 'Sprint over';
+$s_plugin_Scrum_no_sprint = 'No Sprint in progress';
 
 $s_plugin_Scrum_column_new = 'New';
 $s_plugin_Scrum_column_confirmed = 'Confirmed';

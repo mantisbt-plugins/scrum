@@ -1,9 +1,15 @@
 div.scrumbar {
-	float: left;
-	width: 48%;
+	width: 49%;
 	border: 1px dotted gray;
-	margin-right: 1em;
 	padding: 0;
+}
+
+div.scrumbar#resolved_percent {
+	float: left;
+}
+
+div.scrumbar#timeleft_percent {
+	float: right;
 }
 
 div.scrumbar span {
