@@ -259,6 +259,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 	<tr>
 		<td class="form-title" colspan="<?php echo count( $columns ) - 1; ?>">
 			<?php echo plugin_lang_get( 'board' ) ?>
+
 			<form action="<?php echo plugin_page( 'board' ) ?>" method="get">
 				<input type="hidden" name="page" value="Scrum/board"/>
 				<select name="version" >
@@ -360,7 +361,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 				if( $column_enum_val != $status ) {
 ?>
 			<p class="scrumstatus">
-				<?php echo get_enum_element( 'status' , $status) ?>
+				<?php echo get_enum_element( 'status', $status ) ?>
 			</p><?php
 				}
 
