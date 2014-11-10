@@ -262,25 +262,24 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 			<form action="<?php echo plugin_page( 'board' ) ?>" method="get">
 				<input type="hidden" name="page" value="Scrum/board"/>
-				<select name="version" >
+				<select name="version">
 					<option value="" ><?php echo plugin_lang_get( 'all' ) ?></option>
-					<?php foreach( $versions as $version ): ?>
+<?php foreach( $versions as $version ): ?>
 					<option value="<?php echo string_attribute($version) ?>" <?php
-						check_selected( $version, $target_version ); ?>>
-						<?php echo string_display_line( $version ) ?>
-					</option>
-					<?php endforeach ?>
+						check_selected( $version, $target_version ); ?>><?php
+							echo string_display_line( $version );
+					?></option>
+<?php endforeach ?>
 				</select>
 				<select name="category">
 					<option value="" ><?php echo plugin_lang_get( 'all' ) ?></option>
-					<?php foreach( array_keys( $categories ) as $category_name ): ?>
+<?php foreach( array_keys( $categories ) as $category_name ): ?>
 					<option value="<?php echo $category_name ?>" <?php
-						check_selected( $category, $category_name ); ?>>
-						<?php echo $category_name ?>
-					</option>
-					<?php endforeach ?>
+						check_selected( $category, $category_name ); ?>><?php echo $category_name
+					?></option>
+<?php endforeach ?>
 				</select>
-				<select name="tag" >
+				<select name="tag">
 					<?php print_tag_option_list( 0, $tag ); ?>
 				</select>
 				<input type="submit" value="Go" />
@@ -342,17 +341,21 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 	foreach( $columns as $column => $statuses ) {
 ?>
+
 		<td class="scrumcolumn" width="<?php
 			echo ( $bug_count > 0 )
 				? $bug_percentage_by_column[$column]
-				: $bug_percentage_by_column; ?>%"><?php
+				: $bug_percentage_by_column; ?>%">
+<?php
 
 		foreach( $statuses as $status ) {
 			if( isset( $bugs[$status] ) || plugin_config_get( 'show_empty_status' ) ) {
 				if( $first ) {
 					$first = false;
-				} else { ?>
-			<hr/><?php
+				} else {
+?>
+			<hr />
+<?php
 				}
 
 				# Display status name only if different from column header
@@ -383,20 +386,21 @@ html_page_top( plugin_lang_get( 'board' ) );
 							$project_name = project_get_name( $bug->project_id );
 							echo '<span class="project">' . $project_name . '</span> - ';
 						}
-						echo category_full_name( $bug->category_id, false ) ?>
-				</p>
+						echo category_full_name( $bug->category_id, false ) ?></p>
 				<p class="summary">
 					<?php echo bug_format_summary( $bug->id, SUMMARY_FIELD ); ?>
 				</p>
-				<p class="severity" style="background: <?php echo $sevcolor ?>"
+				<p class="severity"
+					style="background: <?php echo $sevcolor ?>"
 					title="Severity: <?php echo get_enum_element( 'severity' , $bug->severity) ?>">
 				</p>
-				<p class="resolution" style="background: <?php echo $rescolor ?>"
+				<p class="resolution"
+					style="background: <?php echo $rescolor ?>"
 					title="Resolution: <?php echo get_enum_element( 'resolution' , $bug->resolution) ?>">
 				</p>
-				<p class="handler">
-					<?php echo $bug->handler_id > 0 ? user_get_name( $bug->handler_id ) : '' ?>
-				</p>
+				<p class="handler"><?php
+					echo $bug->handler_id > 0 ? user_get_name( $bug->handler_id ) : ''
+				?></p>
 			</div>
 <?php
 					} # foreach
