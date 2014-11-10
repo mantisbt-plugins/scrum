@@ -21,6 +21,7 @@ $s_plugin_Scrum_column_new = 'New';
 $s_plugin_Scrum_column_confirmed = 'Confirmed';
 $s_plugin_Scrum_column_resolved = 'Resolved';
 
+$s_plugin_Scrum_configuration = 'Configuration';
 $s_plugin_Scrum_config_title = 'Scrum Plugin Configuration';
 $s_plugin_Scrum_board_columns_label = 'Board Columns';
 $s_plugin_Scrum_board_columns_name = 'Name';

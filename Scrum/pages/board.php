@@ -227,7 +227,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 	<!-- Scrum Board Title and filter -->
 	<tr>
-		<td class="form-title" colspan="<?php echo count( $columns ) ?>">
+		<td class="form-title" colspan="<?php echo count( $columns ) - 1; ?>">
 			<?php echo plugin_lang_get( 'board' ) ?>
 			<form action="<?php echo plugin_page( 'board' ) ?>" method="get">
 				<input type="hidden" name="page" value="Scrum/board"/>
@@ -254,6 +254,21 @@ html_page_top( plugin_lang_get( 'board' ) );
 
 				<input type="submit" value="Go" />
 			</form>
+		</td>
+		<td class="right">
+<?php
+	$t_can_manage = access_has_global_level( config_get( 'manage_plugin_threshold' ) );
+	if ( $t_can_manage ) {
+?>
+			<span class="bracket-link"><?php
+				print_bracket_link(
+					plugin_page( 'config_page' ),
+					plugin_lang_get( 'configuration' )
+				);
+			?></span>
+<?php
+	}
+?>
 		</td>
 	</tr>
 
