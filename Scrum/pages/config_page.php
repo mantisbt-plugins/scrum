@@ -14,7 +14,7 @@ print_manage_menu();
 <br>
 <form action="<?php echo plugin_page( 'config' ) ?>" method="post">
 <?php echo form_security_field( 'plugin_Scrum_config' ) ?>
-<table class="width60" align="center">
+<table class="width75" align="center">
 
 <tr>
 	<td class="form-title" colspan="2"><?php echo plugin_lang_get( 'config_title' ) ?></td>
