@@ -8,6 +8,7 @@ require_once( 'icon_api.php' );
 $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects( $current_project );
 $project_ids[] = $current_project;
+$category_name = null;
 
 $resolved_threshold = config_get( 'bug_resolved_status_threshold' );
 
@@ -31,31 +32,54 @@ while( $row = db_fetch_array( $result ) ) {
 	}
 }
 
-# Get the selected target version
-$versions_by_project = array();
-$token_versions_by_project = token_get_value( ScrumPlugin::TOKEN_SCRUM_VERSION );
-if( !is_null( $token_versions_by_project ) ) {
-	$versions_by_project = unserialize( $token_versions_by_project );
-}
-
-if( gpc_isset( 'version' ) ) {
-	$target_version = gpc_get_string( 'version', '' );
+if( gpc_isset( 'clear_filter' ) ) {
+	$target_version = '';
+	$category = null;
+	$tag = -1;
 } else {
-	if( array_key_exists( $current_project, $versions_by_project) ) {
-		$target_version = $versions_by_project[$current_project];
+	# Get the selected target version
+	$versions_by_project = array();
+	$token_versions_by_project = token_get_value( ScrumPlugin::TOKEN_SCRUM_VERSION );
+	if( !is_null( $token_versions_by_project ) ) {
+		$versions_by_project = unserialize( $token_versions_by_project );
 	}
-}
 
-if( !in_array( $target_version, $versions ) ) {
-	$target_version = '' ;
-}
+	if( gpc_isset( 'version' ) ) {
+		$target_version = gpc_get_string( 'version', '' );
+	} else {
+		if( array_key_exists( $current_project, $versions_by_project) ) {
+			$target_version = $versions_by_project[$current_project];
+		}
+	}
 
-$versions_by_project[$current_project] = $target_version;
-$t_res = token_set(
-	ScrumPlugin::TOKEN_SCRUM_VERSION,
-	serialize( $versions_by_project ),
-	plugin_config_get( 'token_expiry' )
-);
+	if( !in_array( $target_version, $versions ) ) {
+		$target_version = '' ;
+	}
+
+	$versions_by_project[$current_project] = $target_version;
+	$t_res = token_set(
+		ScrumPlugin::TOKEN_SCRUM_VERSION,
+		serialize( $versions_by_project ),
+		plugin_config_get( 'token_expiry' )
+	);
+
+	# Get the selected category
+	$categories_by_project = array();
+	$token_categories_by_project = token_get_value( ScrumPlugin::TOKEN_SCRUM_CATEGORY );
+
+	if( !is_null( $token_categories_by_project ) ) {
+		$categories_by_project = unserialize( $token_categories_by_project );
+	}
+
+	if( gpc_isset( 'category' ) ) {
+		$category = gpc_get_string( 'category', '' );
+	} else {
+		if( array_key_exists( $current_project, $categories_by_project) ) {
+			$category = $categories_by_project[$current_project];
+		}
+	}
+
+}
 
 # Fetch list of categories in use for the given projects
 $params = array();
@@ -71,7 +95,6 @@ if( $target_version ) {
 $result = db_query_bound( $query, $params );
 $categories = array();
 $category_ids = array();
-$category_name = null;
 while( $row = db_fetch_array( $result ) ) {
 	$category_id = $row['category_id'];
 	$category_ids[] = $category_id;
@@ -81,22 +104,6 @@ while( $row = db_fetch_array( $result ) ) {
 		$categories[$category_name][] = $category_id;
 	} else {
 		$categories[$category_name] = array( $category_id );
-	}
-}
-
-# Get the selected category
-$categories_by_project = array();
-$token_categories_by_project = token_get_value( ScrumPlugin::TOKEN_SCRUM_CATEGORY );
-
-if( !is_null( $token_categories_by_project ) ) {
-	$categories_by_project = unserialize( $token_categories_by_project );
-}
-
-if( gpc_isset( 'category' ) ) {
-	$category = gpc_get_string( 'category', '' );
-} else {
-	if( array_key_exists( $current_project, $categories_by_project) ) {
-		$category = $categories_by_project[$current_project];
 	}
 }
 
@@ -283,7 +290,11 @@ html_page_top( plugin_lang_get( 'board' ) );
 				<select name="tag">
 					<?php print_tag_option_list( 0, $tag ); ?>
 				</select>
-				<input type="submit" value="Go" />
+				<input type="submit" value="<?php echo lang_get( 'filter_button' ); ?>"/>
+			</form>
+			<form action="<?php echo plugin_page( 'board' ) ?>" method="post">
+				<input type="hidden" name="page" value="Scrum/board"/>
+				<input name="clear_filter" type="submit" value="<?php echo lang_get( 'reset_query' ); ?>"/>
 			</form>
 		</td>
 		<td class="right">
