@@ -225,6 +225,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 <br/>
 <table class="width100 scrumboard" align="center" cellspacing="1">
 
+	<!-- Scrum Board Title and filter -->
 	<tr>
 		<td class="form-title" colspan="<?php echo count( $columns ) ?>">
 			<?php echo plugin_lang_get( 'board' ) ?>
@@ -256,6 +257,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 		</td>
 	</tr>
 
+	<!-- Progress bars -->
 	<tr>
 		<td colspan="<?php echo count( $columns ) ?>">
 			<div id="resolved_percent" class="scrumbar">
@@ -283,6 +285,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 		</td>
 	</tr>
 
+	<!-- Scrum Board -->
 	<tr class="row-category">
 		<?php foreach( $columns as $column => $statuses ): ?>
 		<td><?php echo plugin_lang_get( 'column_' . $column ); ?></td>
