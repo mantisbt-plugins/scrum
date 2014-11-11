@@ -71,6 +71,7 @@ if( $target_version ) {
 $result = db_query_bound( $query, $params );
 $categories = array();
 $category_ids = array();
+$category_name = null;
 while( $row = db_fetch_array( $result ) ) {
 	$category_id = $row['category_id'];
 	$category_ids[] = $category_id;
