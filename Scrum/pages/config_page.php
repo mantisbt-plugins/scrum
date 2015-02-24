@@ -116,7 +116,7 @@ print_manage_menu();
 	</td>
 	<td>
 		<input name="<?php echo $t_field; ?>" size="5" value="<?php
-			echo plugin_config_get( $t_field ) / ScrumPlugin::DURATION_DAY; ?>">
+			echo plugin_config_get( $t_field ); ?>">
 	</td>
 </tr>
 
@@ -142,7 +142,7 @@ print_manage_menu();
 	</td>
 	<td>
 		<input name="<?php echo $t_field; ?>" size="5" value="<?php
-			echo plugin_config_get( $t_field ) / ScrumPlugin::DURATION_DAY; ?>">
+			echo plugin_config_get( $t_field ); ?>">
 	</td>
 </tr>
 
