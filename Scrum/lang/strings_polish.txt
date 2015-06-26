@@ -10,8 +10,14 @@ $s_plugin_Scrum_description = 'Tablica Scrum wg statusów, priorytetów i wersji
 $s_plugin_Scrum_board = 'Tablica Scrum';
 $s_plugin_Scrum_all = 'Wszystkie';
 
-$s_plugin_Scrum_time_weeks = ' tygodni pozostało';
-$s_plugin_Scrum_time_days = ' dni';
-$s_plugin_Scrum_time_hours = ' godzin pozostało';
+$s_plugin_Scrum_time_weeks = '%d tygodni pozostało';
+$s_plugin_Scrum_time_days = '%d dni';
+$s_plugin_Scrum_time_hours = '%d godzin pozostało';
+$s_plugin_Scrum_time_1hour = 'mniej niż 1 godzina do końca';
 $s_plugin_Scrum_time_up = 'Sprint zakończony';
+$s_plugin_Scrum_no_sprint = 'Brak trwających sprintów';
+
+$s_plugin_Scrum_column_new = 'Nowe';
+$s_plugin_Scrum_column_confirmed = 'Przypisane';
+$s_plugin_Scrum_column_resolved = 'Rozwiązane';
 
