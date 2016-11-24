@@ -21,7 +21,7 @@ class ScrumPlugin extends MantisPlugin
 
 		$this->version = "0.3";
 		$this->requires = array(
-			"MantisCore" => "1.2.6",
+			"MantisCore" => "1.2.6, <1.3.99",
 		);
 		$this->uses = array(
 			"Source" => "0.16",
