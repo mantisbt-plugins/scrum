@@ -3,7 +3,7 @@
 # Copyright (c) 2011 John Reese
 # Licensed under the MIT license
 
-require_once( 'icon_api.php' );
+require_api( 'icon_api.php' );
 
 $current_project = helper_get_current_project();
 $project_ids = current_user_get_all_accessible_subprojects( $current_project );
@@ -246,7 +246,7 @@ html_page_top( plugin_lang_get( 'board' ) );
 					<option value=""><?php echo plugin_lang_get( 'all' ) ?></option>
 					<?php foreach( array_keys( $categories ) as $category_name ): ?>
 					<option value="<?php echo $category_name ?>" <?php
-						check_selected( $category, $category_name ); ?>>
+						check_selected( empty($category) ? "" : $category, $category_name ); ?>>
 						<?php echo $category_name ?>
 					</option>
 					<?php endforeach ?>
