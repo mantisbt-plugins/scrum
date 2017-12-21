@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c) 2011 John Reese
+# Copyright (c) 2011-2018 John Reese
 # Licensed under the MIT license
 
 $s_plugin_Scrum_ = '';
@@ -29,9 +29,9 @@ $s_plugin_Scrum_reference_enum = 'Reference enumeration (%s):<br>%s';
 $s_plugin_Scrum_board_severity_colors_label = 'Board Severity Colors';
 $s_plugin_Scrum_board_resolution_colors_label = 'Board Resolution Colors';
 $s_plugin_Scrum_color = 'Color';
-$s_plugin_Scrum_colors_info = 'Define the colors assigned to each <i>%s</i>, as a comma-delimited list of elements with the form &lt;<i>Code</i>:<i>Color</i>&gt;.<br>Note: undefined codes will display in white on the Cards. You can either use standard CSS color names or hex values.';
-$s_plugin_Scrum_sprint_length_label = 'Sprint Length';
-$s_plugin_Scrum_sprint_length_info = 'The duration of the Sprint in days';
+$s_plugin_Scrum_colors_info = 'Define the colors assigned to each <i>%s</i>, as a comma-delimited list of elements with the form <code>"Code":"Color"</code>.<br>Note: undefined codes will display in white on the Cards. You can either use standard CSS color names or hex values.';
+$s_plugin_Scrum_board_sprint_length_label = 'Sprint Length';
+$s_plugin_Scrum_board_sprint_length_info = 'The duration of the Sprint in days';
 $s_plugin_Scrum_show_empty_status_label = 'Always show Status';
 $s_plugin_Scrum_show_empty_status_info = 'If checked, the Status is displayed even if does not contain any Cards';
 $s_plugin_Scrum_token_expiry_label = 'Token Expiry';
