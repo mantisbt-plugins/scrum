@@ -1,7 +1,7 @@
 # Scrum Board plugin for MantisBT
 
 Copyright (c) 2011 - 2012  John Reese - http://noswap.com  
-Copyright (c) 2012 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+Copyright (c) 2012 - 2018  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 
 Released under the [MIT license](http://opensource.org/licenses/MIT)
 
@@ -13,14 +13,18 @@ See the [Changelog](https://github.com/mantisbt-plugins/scrum/blob/config/CHANGE
 Adds a Scrum board based on Status, Category, and Target Version
 to MantisBT.
 
+![MantisBT Scrum Board page](./scrum-plugin-board.png)
+
 
 ## Requirements
 
-The plugin requires [MantisBT](http://www.mantisbt.org/) version 1.2.6 or higher.
+The plugin requires [MantisBT](http://www.mantisbt.org/) version 1.2.6 or higher and PHP 5.6.
 
 If the [Source Integration plugin](https://github.com/mantisbt-plugins/source-integration)
 (version 0.16 or higher) is installed, the cards will display the number of
 changesets attached to each issue.
+
+The plugin is currently only tested with MantisBT 1.2*.
 
 
 ## Installation
@@ -32,6 +36,7 @@ changesets attached to each issue.
    *Manage -> Manage Plugins*.
 4. In the *Available Plugins* list, you'll find the *Scrum* plugin;
    click the **Install** link.
+5. All settings are available after click on the plugin in the Plugin list.
 
 
 ## Usage
